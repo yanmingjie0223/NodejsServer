@@ -9,7 +9,7 @@ dotnet %LUBAN_DLL% ^
     -c typescript-bin ^
     -d bin  ^
     --conf %CONF_ROOT%\__zconfig__.conf ^
-    -x outputCodeDir=%WORKSPACE%src\lubancode ^
-    -x outputDataDir=%WORKSPACE%src\lubandata
+    -x outputCodeDir=%WORKSPACE%src\luban\lubancode ^
+    -x outputDataDir=%WORKSPACE%src\luban\lubandata
 
 pause

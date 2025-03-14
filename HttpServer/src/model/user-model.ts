@@ -19,7 +19,7 @@ export class User {
         this.openId = openId;
         // 角色最开始进入游戏时间
         this.createTime = createTime;
-        // 每次进入游戏更新时间 
+        // 每次进入游戏更新时间
         this.updateTime = updateTime;
     }
 

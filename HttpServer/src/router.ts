@@ -1,6 +1,14 @@
-import { test } from "./controller/test.controller";
+import polka from "polka";
+import { test } from "./controller/test-controller";
 
-export default function (app) {
-    return app
-        .post('/test', test)
+/**
+ * 路由器配置类
+ * @param app
+ * @returns
+ */
+export default function (app: polka.Polka): polka.Polka {
+
+	app.post('/test', test as any);
+
+	return app;
 }

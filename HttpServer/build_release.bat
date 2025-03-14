@@ -9,8 +9,8 @@ del /q /s !distPath!
 
 call npx tsc
 mkdir %distPath%src\serverConfig
-copy %curPath%src\serverConfig\config.release.json %distPath%src\serverConfig\config.json
-xcopy /s /i /y %curPath%src\lubandata %distPath%src\lubandata
+copy %curPath%src\serverConfig\config-release.json %distPath%src\serverConfig\config.json
+xcopy /s /i /y %curPath%src\luban\lubandata %distPath%src\luban\lubandata
 
 xcopy /s /i /y %distPath% %releasePath%dist
 copy %curPath%index.js %releasePath%dist\index.js

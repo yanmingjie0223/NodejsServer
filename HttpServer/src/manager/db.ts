@@ -1,47 +1,39 @@
 import * as typeorm from "typeorm";
-import { serverConfig } from "./server.config";
+import { serverConfig } from "./server-config";
 import { Logger } from "./log";
-import userSchema from "../model/user.schema";
+import userSchema from "../model/user-schema";
+import Singleton from "../base/singleton";
 
-export class DB {
+export class DB extends Singleton {
 
-    private static _instance: DB;
+	private ioDB: typeorm.DataSource;
 
-    private ioDB;
+	public override initialize(): void {
+		const source = new typeorm.DataSource({
+			type: serverConfig.db.type,
+			host: serverConfig.db.host,
+			port: serverConfig.db.port,
+			username: serverConfig.db.username,
+			password: serverConfig.db.password,
+			database: serverConfig.db.database,
+			synchronize: true,
+			logging: false,
+			entities: [
+				userSchema,
+			]
+		});
+		source.initialize()
+			.then(() => {
+				this.ioDB = source;
+				console.log(`> Connecting ${serverConfig.db.type} on ${serverConfig.db.host}:${serverConfig.db.port}`);
+			})
+			.catch((e: Error) => {
+				Logger.getInstance<Logger>().error('数据库启动失败:', e);
+			});
+	}
 
-    public static getInstance(): DB {
-        if (!this._instance) {
-            this._instance = new DB();
-            this._instance.initialize();
-        }
-        return this._instance;
-    }
-
-    public initialize(): void {
-        typeorm.createConnection({
-            type: serverConfig.db.type,
-            host: serverConfig.db.host,
-            port: serverConfig.db.port,
-            username: serverConfig.db.username,
-            password: serverConfig.db.password,
-            database: serverConfig.db.database,
-            synchronize: true,
-            logging: false,
-            entities: [
-                userSchema,
-            ]
-        }).then((connection) => {
-            this.ioDB = connection;
-            console.log(`> Connecting ${serverConfig.db.type} on ${serverConfig.db.host}:${serverConfig.db.port}`);
-        }).catch(e => {
-            Logger.error('数据库启动失败:', e);
-        });
-    }
-
-    public getConnection(): void {
-        return this.ioDB;
-    }
+	public getConnection(): typeorm.DataSource {
+		return this.ioDB;
+	}
 
 }
-
-export const db: DB = DB.getInstance(); 
