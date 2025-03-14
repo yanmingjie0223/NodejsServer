@@ -37,3 +37,5 @@ export class DB extends Singleton {
 	}
 
 }
+
+export const db: DB = DB.getInstance();

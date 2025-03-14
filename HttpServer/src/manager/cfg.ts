@@ -13,7 +13,7 @@ export class Config extends Singleton {
 		this.jsonFileNames = cfg.Tables.getTableNames();
 
 		for (const curFileName of this.jsonFileNames) {
-			const bytes = fs.readFileSync(`./dist/src/lubandata/${curFileName}.bytes`);
+			const bytes = fs.readFileSync(`./dist/src/luban/lubandata/${curFileName}.bytes`);
 			this.dataMap.set(curFileName, new Uint8Array(bytes));
 		}
 
@@ -29,3 +29,5 @@ export class Config extends Singleton {
 	}
 
 }
+
+export const config: Config = Config.getInstance();

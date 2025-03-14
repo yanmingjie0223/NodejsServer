@@ -56,3 +56,5 @@ export class Logger extends Singleton {
 	}
 
 }
+
+export const logger: Logger = Logger.getInstance();
