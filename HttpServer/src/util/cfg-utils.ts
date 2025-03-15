@@ -1,9 +1,9 @@
-import { Config } from "../manager/cfg";
+import { config } from "../manager/cfg";
 
 export class ConfigUtils {
 
 	public static getGlobalInt(key: string): number {
-		const tables = Config.getInstance<Config>().tables;
+		const tables = config.tables;
 		const item = tables.TbGlobal.get(key);
 		if (!item) {
 			return 0;
@@ -19,7 +19,7 @@ export class ConfigUtils {
 	}
 
 	public static getGlobalFloat(key: string): number {
-		const tables = Config.getInstance<Config>().tables;
+		const tables = config.tables;
 		const item = tables.TbGlobal.get(key);
 		if (!item) {
 			return 0;
@@ -35,7 +35,7 @@ export class ConfigUtils {
 	}
 
 	public static getGlobalString(key: string) {
-		const tables = Config.getInstance<Config>().tables;
+		const tables = config.tables;
 		const item = tables.TbGlobal.get(key);
 		if (!item) {
 			return 0;
