@@ -1,7 +1,7 @@
 import IoRedis from "ioredis";
 import { serverConfig } from "./server-config";
 import Singleton from "../base/singleton";
-import { Logger } from "./log";
+import { logger } from "./log";
 
 export class Redis extends Singleton {
 
@@ -21,7 +21,7 @@ export class Redis extends Singleton {
 
 		this.ioRedis.ping((err, result) => {
 			if (err) {
-				Logger.getInstance<Logger>().error("Failed to connect to Redis:", err);
+				logger.error("Failed to connect to Redis:", err);
 			} else {
 				console.log(`> Connecting redis on ${serverConfig.redis.host}:${serverConfig.redis.port}`);
 			}

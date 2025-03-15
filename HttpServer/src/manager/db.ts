@@ -1,6 +1,6 @@
 import * as typeorm from "typeorm";
 import { serverConfig } from "./server-config";
-import { Logger } from "./log";
+import { logger } from "./log";
 import userSchema from "../model/user-schema";
 import Singleton from "../base/singleton";
 
@@ -28,7 +28,7 @@ export class DB extends Singleton {
 				console.log(`> Connecting ${serverConfig.db.type} on ${serverConfig.db.host}:${serverConfig.db.port}`);
 			})
 			.catch((e: Error) => {
-				Logger.getInstance<Logger>().error('数据库启动失败:', e);
+				logger.error('数据库启动失败:', e);
 			});
 	}
 

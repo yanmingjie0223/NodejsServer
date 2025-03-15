@@ -1,6 +1,5 @@
 import { CRequest, CResponse } from "../interface/index";
-import { C2S_Base, S2C_Base } from "../interface/protocol";
-import { ProtocolCode } from "../interface/protocol-code";
+import { C2S_Base, ProtocolCode, S2C_Base } from "../interface/protocol";
 
 /**
  * /test协议的处理逻辑
