@@ -1,4 +1,5 @@
 import Singleton from "../base/singleton";
+import * as encry from '../util/encry';
 import { CRequest, CResponse } from "../interface/index";
 import { C2S_Base, C2S_Base_Login } from "../interface/protocol";
 
@@ -18,7 +19,8 @@ export class Checkout extends Singleton {
 
 		const openId = data.openId;
 		const token = data.token;
-		const redis_token = await req.redis.get(`user-${openId}-hope`);
+		const reidsKey = encry.getRedisKey(openId);
+		const redis_token = await req.redis.get(reidsKey);
 
 		if (token !== redis_token) {
 			res.end(JSON.stringify({ code: -1, errMsg: 'token auth failed' }));

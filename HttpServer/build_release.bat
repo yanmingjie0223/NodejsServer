@@ -8,8 +8,8 @@ del /q /s !releasePath!
 del /q /s !distPath!
 
 call npx tsc
-mkdir %distPath%src\serverConfig
-copy %curPath%src\serverConfig\config-release.json %distPath%src\serverConfig\config.json
+mkdir %distPath%src\server-config
+copy %curPath%src\server-config\config-release.json %distPath%src\server-config\config.json
 xcopy /s /i /y %curPath%src\luban\lubandata %distPath%src\luban\lubandata
 
 xcopy /s /i /y %distPath% %releasePath%dist

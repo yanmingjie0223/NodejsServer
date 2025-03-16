@@ -1,4 +1,5 @@
 import md5 from "blueimp-md5";
+import { serverConfig } from "../manager/server-config";
 
 /**
  * 根据openId和添加元素获取生成的token值
@@ -8,7 +9,16 @@ import md5 from "blueimp-md5";
  */
 export function getToken(openId: string, salt: number): string {
 	return md5(md5(openId + salt) + salt + openId[0]);
-};
+}
+
+/**
+ * 获取redis存储key
+ * @param openId
+ * @returns
+ */
+export function getRedisKey(openId: string): string {
+	return `user-${serverConfig.app.appname}-${openId}-hope`;
+}
 
 /**
  * 根据数组获取存储字符串
@@ -25,7 +35,7 @@ export function getArrayIntByDBVachar(arrStr: string): number[] {
 		intArr.push(parseInt(arr[i], 10));
 	}
 	return intArr;
-};
+}
 
 /**
  * 根据字符串获取number数组
@@ -35,4 +45,4 @@ export function getArrayIntByDBVachar(arrStr: string): number[] {
 export function getVacharByArrayInt(arr: Array<string | number>): string {
 	const vc = arr.join(";");
 	return vc;
-};
+}
