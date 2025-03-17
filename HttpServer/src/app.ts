@@ -71,4 +71,4 @@ export default function runApp() {
 	app.listen(serverConfig.port, () => {
 		console.log(`> Running on localhost:${serverConfig.port}`);
 	});
-};
+}

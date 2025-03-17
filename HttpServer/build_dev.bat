@@ -7,7 +7,7 @@ set distPath="%curPath%dist\"
 del /q /s !buildPath!
 del /q /s !distPath!
 
-call npx tsc
+call npx tsc --sourceMap
 mkdir %distPath%src\server-config
 copy %curPath%src\server-config\config.json %distPath%src\server-config\config.json
 xcopy /s /i /y %curPath%src\luban\lubandata %distPath%src\luban\lubandata
