@@ -6,5 +6,5 @@ import fs from "fs";
  * @returns
  */
 export function readJsonConfig(name: string): any {
-    return JSON.parse(fs.readFileSync(`./${name}.json`, 'utf-8'));
+	return JSON.parse(fs.readFileSync(`./${name}.json`, 'utf-8'));
 }

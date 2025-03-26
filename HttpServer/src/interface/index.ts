@@ -6,6 +6,9 @@ import { Logger } from "../manager/log";
 import { Config } from "../manager/cfg";
 import { Checkout } from "../manager/checkout";
 
+/**
+ * 请求: c2s请求数据
+ */
 export interface CRequest extends Request {
 	db: typeorm.DataSource;
 	redis: IoRedis;
@@ -15,4 +18,7 @@ export interface CRequest extends Request {
 	body: { data: string };
 }
 
+/**
+ * 回应: s2c回应数据
+ */
 export interface CResponse extends ServerResponse { }

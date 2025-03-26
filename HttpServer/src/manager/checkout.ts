@@ -28,7 +28,7 @@ export class Checkout extends Singleton {
 		}
 
 		return data as T;
-	};
+	}
 
 	/**
 	 * 获取协议中post data的json数据
@@ -45,6 +45,6 @@ export class Checkout extends Singleton {
 			res.end(JSON.stringify({ code: -1, errMsg: 'upload data is not json data' }));
 			return null;
 		}
-	};
+	}
 
 }
