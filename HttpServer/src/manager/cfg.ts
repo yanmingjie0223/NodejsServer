@@ -9,7 +9,7 @@ export class Config extends Singleton {
 	private jsonFileNames: string[] = [];
 	private dataMap = new Map<string, Uint8Array>();
 
-	public override initialize() {
+	public override initialize(): void {
 		this.jsonFileNames = cfg.Tables.getTableNames();
 
 		for (const curFileName of this.jsonFileNames) {
