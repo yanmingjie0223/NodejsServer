@@ -4,8 +4,8 @@ set curPath=%~dp0
 set buildPath="%curPath%build\"
 set distPath="%curPath%dist\"
 
-del /q /s !buildPath!
-del /q /s !distPath!
+rd /q /s !buildPath!
+rd /q /s !distPath!
 
 call npx tsc --sourceMap
 mkdir %distPath%src\server-config

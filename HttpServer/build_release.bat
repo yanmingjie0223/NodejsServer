@@ -4,8 +4,8 @@ set curPath=%~dp0
 set releasePath="%curPath%release\"
 set distPath="%curPath%dist\"
 
-del /q /s !releasePath!
-del /q /s !distPath!
+rd /q /s !releasePath!
+rd /q /s !distPath!
 
 call npx tsc
 mkdir %distPath%src\server-config
