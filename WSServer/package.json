@@ -1,13 +1,13 @@
 {
   "private": true,
-  "name": "my-app",
+  "name": "ws-server",
   "version": "0.16.0",
   "description": "npm init template for bootstrapping an empty Colyseus project",
-  "main": "lib/index.js",
+  "main": "build/index.js",
   "scripts": {
     "start": "tsx watch src/index.ts",
     "tsx": "tsx watch src/index.ts",
-    "loadtest": "tsx loadtest/example.ts --room my_room --numClients 99",
+    "loadtest": "tsx test/loadtest/example.ts --room my_room --numClients 99",
     "build": "tsc",
     "test": "mocha -r tsx ts-node/register test/**_test.ts --exit --timeout 15000",
     "schema-codegen": "schema-codegen src/rooms/schema/* --csharp --output ../Assets/Example/"
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/colyseus/create-colyseus#readme",
   "devDependencies": {
+    "@bufbuild/protobuf": "^2.2.5",
     "@colyseus/loadtest": "^0.16.0",
     "@colyseus/playground": "^0.16.0",
     "@colyseus/testing": "^0.16.0",
@@ -28,6 +29,7 @@
     "@types/node": "^22.14.1",
     "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",
+    "colyseus.js": "^0.16.16",
     "copyfiles": "^2.4.1",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
@@ -35,6 +37,7 @@
     "eslint-plugin-typescript": "^0.14.0",
     "mocha": "^9.0.2",
     "prettier": "^2.3.1",
+    "ts-proto": "^2.7.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
   },

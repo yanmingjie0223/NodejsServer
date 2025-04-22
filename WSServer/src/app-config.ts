@@ -1,13 +1,11 @@
 import config from "@colyseus/tools";
 import { WebSocketTransport } from "@colyseus/ws-transport";
 import { LobbyRoom } from "colyseus";
+import { AppRoom } from "./rooms/AppRoom";
 
 export default config({
-	options: {
-		// devMode: true,
-		// driver: new RedisDriver(),
-		// presence: new RedisPresence(),
-	},
+
+	options: {},
 
 	initializeTransport: (options) => new WebSocketTransport(options),
 
@@ -15,15 +13,13 @@ export default config({
 		/**
 		 * Define your room handlers:
 		 */
+		gameServer.define('app-room', AppRoom);
 
 		gameServer.define('lobby', LobbyRoom);
 	},
 
-	initializeExpress: (app) => {
+	initializeExpress: (app) => { },
 
-	},
+	beforeListen: () => { }
 
-	beforeListen: () => {
-
-	}
 });
