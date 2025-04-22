@@ -1,7 +1,7 @@
 import config from "@colyseus/tools";
 import { WebSocketTransport } from "@colyseus/ws-transport";
 import { LobbyRoom } from "colyseus";
-import { AppRoom } from "./rooms/AppRoom";
+import { AppRoom } from "./rooms/app-room";
 
 export default config({
 
