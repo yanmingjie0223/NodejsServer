@@ -7,13 +7,13 @@
   "scripts": {
     "start": "tsx watch src/index.ts",
     "tsx": "tsx watch src/index.ts",
-    "loadtest": "tsx test/loadtest/example.ts --room my_room --numClients 99",
+    "loadtest": "tsx test/loadtest/example.ts --room app_room --numClients 9999",
     "build": "tsc",
     "test": "mocha -r tsx ts-node/register test/**_test.ts --exit --timeout 15000",
     "schema-codegen": "schema-codegen src/rooms/schema/* --csharp --output ../Assets/Example/"
   },
   "author": "",
-  "license": "UNLICENSED",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/colyseus/create-colyseus/issues"
   },
