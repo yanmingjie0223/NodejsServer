@@ -1,5 +1,7 @@
 import { Client, Room } from "colyseus.js";
 import { cli, Options } from "@colyseus/loadtest";
+import { MSG_ID } from "../../src/protocol/msg";
+import { C2S_Login } from "../../src/protocol/login";
 
 /**
  * 连接测试
@@ -12,6 +14,11 @@ export async function main(options: Options) {
 	});
 
 	console.log("joined successfully!");
+
+	const loginData = C2S_Login.create();
+	loginData.account = "ymj";
+	const binaryWriter = C2S_Login.encode(loginData);
+	room.send("proto", { id: MSG_ID.Login_C2S_Login, buff: binaryWriter.finish() });
 
 	room.onMessage("message-type", (payload) => {
 		// logic

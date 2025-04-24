@@ -4,6 +4,7 @@ set CUR_PATH=%~dp0
 set PROTOC=.\tools\protoc\bin\protoc.exe
 set PLUGIN=.\node_modules\.bin\protoc-gen-ts_proto.cmd
 set OUT_DIR=.\src\protocol
+set OUT_DIR_INDEX=.\src\protocol\index.ts
 set PROTO_DIR=.\protocol
 
 if not exist "%CUR_PATH%node_modules" (
@@ -19,7 +20,7 @@ REM 执行编译
 "%PROTOC%" ^
     --plugin=protoc-gen-ts_proto="%PLUGIN%" ^
     --ts_proto_out="%OUT_DIR%" ^
-    --ts_proto_opt=outputServices=grpc-js,env=node,esModuleInterop=true ^
+    --ts_proto_opt=outputServices=grpc-js,snakeToCamel=false,env=node,esModuleInterop=true ^
     --proto_path="%PROTO_DIR%" ^
     "%PROTO_DIR%\*.proto"
 
@@ -31,6 +32,14 @@ if exist "%OUT_DIR%" (
 		if not exist "%OUT_DIR%\!tsName!" (
 			del /q /s !name!
 		)
+	)
+
+	del /q /s %CUR_PATH%%OUT_DIR_INDEX%
+	for %%i in (*.ts) do (
+		set name=%%i
+		set tsName=!name:~0,-3!
+		set str=export * as !tsName! from './!tsName!';
+		echo !str!>>%CUR_PATH%%OUT_DIR_INDEX%
 	)
 )
 

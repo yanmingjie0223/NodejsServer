@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package msg.login;
+
 message C2S_Login {
   string account = 1;
 }

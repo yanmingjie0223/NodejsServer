@@ -7,33 +7,33 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
-export const protobufPackage = "";
+export const protobufPackage = "msg.login";
 
-export interface C2SLogin {
+export interface C2S_Login {
   account: string;
 }
 
-export interface S2CLogin {
+export interface S2C_Login {
   code: number;
   message: string;
 }
 
-function createBaseC2SLogin(): C2SLogin {
+function createBaseC2S_Login(): C2S_Login {
   return { account: "" };
 }
 
-export const C2SLogin: MessageFns<C2SLogin> = {
-  encode(message: C2SLogin, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const C2S_Login: MessageFns<C2S_Login> = {
+  encode(message: C2S_Login, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.account !== "") {
       writer.uint32(10).string(message.account);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): C2SLogin {
+  decode(input: BinaryReader | Uint8Array, length?: number): C2S_Login {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseC2SLogin();
+    const message = createBaseC2S_Login();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -54,11 +54,11 @@ export const C2SLogin: MessageFns<C2SLogin> = {
     return message;
   },
 
-  fromJSON(object: any): C2SLogin {
+  fromJSON(object: any): C2S_Login {
     return { account: isSet(object.account) ? globalThis.String(object.account) : "" };
   },
 
-  toJSON(message: C2SLogin): unknown {
+  toJSON(message: C2S_Login): unknown {
     const obj: any = {};
     if (message.account !== "") {
       obj.account = message.account;
@@ -66,22 +66,22 @@ export const C2SLogin: MessageFns<C2SLogin> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<C2SLogin>, I>>(base?: I): C2SLogin {
-    return C2SLogin.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<C2S_Login>, I>>(base?: I): C2S_Login {
+    return C2S_Login.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<C2SLogin>, I>>(object: I): C2SLogin {
-    const message = createBaseC2SLogin();
+  fromPartial<I extends Exact<DeepPartial<C2S_Login>, I>>(object: I): C2S_Login {
+    const message = createBaseC2S_Login();
     message.account = object.account ?? "";
     return message;
   },
 };
 
-function createBaseS2CLogin(): S2CLogin {
+function createBaseS2C_Login(): S2C_Login {
   return { code: 0, message: "" };
 }
 
-export const S2CLogin: MessageFns<S2CLogin> = {
-  encode(message: S2CLogin, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const S2C_Login: MessageFns<S2C_Login> = {
+  encode(message: S2C_Login, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.code !== 0) {
       writer.uint32(8).int32(message.code);
     }
@@ -91,10 +91,10 @@ export const S2CLogin: MessageFns<S2CLogin> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): S2CLogin {
+  decode(input: BinaryReader | Uint8Array, length?: number): S2C_Login {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseS2CLogin();
+    const message = createBaseS2C_Login();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -123,14 +123,14 @@ export const S2CLogin: MessageFns<S2CLogin> = {
     return message;
   },
 
-  fromJSON(object: any): S2CLogin {
+  fromJSON(object: any): S2C_Login {
     return {
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       message: isSet(object.message) ? globalThis.String(object.message) : "",
     };
   },
 
-  toJSON(message: S2CLogin): unknown {
+  toJSON(message: S2C_Login): unknown {
     const obj: any = {};
     if (message.code !== 0) {
       obj.code = Math.round(message.code);
@@ -141,11 +141,11 @@ export const S2CLogin: MessageFns<S2CLogin> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<S2CLogin>, I>>(base?: I): S2CLogin {
-    return S2CLogin.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<S2C_Login>, I>>(base?: I): S2C_Login {
+    return S2C_Login.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<S2CLogin>, I>>(object: I): S2CLogin {
-    const message = createBaseS2CLogin();
+  fromPartial<I extends Exact<DeepPartial<S2C_Login>, I>>(object: I): S2C_Login {
+    const message = createBaseS2C_Login();
     message.code = object.code ?? 0;
     message.message = object.message ?? "";
     return message;

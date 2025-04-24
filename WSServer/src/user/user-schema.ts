@@ -1,18 +1,18 @@
 import { Schema, type } from "@colyseus/schema";
 
 export class UserSchema extends Schema {
-	@type({ map: "number" })
+	@type("number")
 	public uid: number;
 
-	@type({ map: "string" })
+	@type("string")
 	public nickname: string;
 
-	@type({ map: "string" })
+	@type("string")
 	public openId: string;
 
-	@type({ map: "number" })
+	@type("number")
 	public createTime: number;
 
-	@type({ map: "number" })
+	@type("number")
 	public updateTime: number;
 }

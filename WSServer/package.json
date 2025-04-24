@@ -7,7 +7,7 @@
   "scripts": {
     "start": "tsx watch src/index.ts",
     "tsx": "tsx watch src/index.ts",
-    "loadtest": "tsx test/loadtest/example.ts --room app_room --numClients 9999",
+    "loadtest": "tsx test/loadtest/example.ts --room app-room --numClients 1",
     "build": "tsc",
     "test": "mocha -r tsx ts-node/register test/**_test.ts --exit --timeout 15000",
     "schema-codegen": "schema-codegen src/rooms/schema/* --csharp --output ../Assets/Example/"
@@ -45,6 +45,8 @@
     "@colyseus/auth": "^0.16.0",
     "@colyseus/core": "^0.16.0",
     "@colyseus/monitor": "^0.16.0",
+    "@colyseus/redis-driver": "^0.16.1",
+    "@colyseus/redis-presence": "^0.16.2",
     "@colyseus/schema": "^3.0.33",
     "@colyseus/tools": "^0.16.0",
     "@colyseus/ws-transport": "^0.16.4",

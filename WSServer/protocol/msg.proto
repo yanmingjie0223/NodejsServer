@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package msg;
+
+enum MSG_ID {
+
+	NULL = 0;
+
+	Login_C2S_Login = 100100;
+	Login_S2S_Login = 200100;
+
+}
