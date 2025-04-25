@@ -1,0 +1,30 @@
+import * as proto from "../protocol/index";
+import { Room, Client } from "colyseus";
+type protocol_method = (room: Room, client: Client, protoObj: any) => void;
+
+const protocol_methods = new Map<number, protocol_method>();
+
+/**
+ * 协议装饰器
+ * @export
+ * @param {proto.msg.MSG_ID} msgId
+ * @return {Function}
+ */
+export function protocolMethod(msgId: proto.msg.MSG_ID): Function {
+	return function (target: any, context?: any) {
+		if (typeof target === 'function') {
+			protocol_methods.set(msgId, target);
+		} else if (context?.kind === 'method') {
+			protocol_methods.set(msgId, target[context.name]);
+		}
+	};
+}
+
+/**
+ * 根据 ID 获取函数
+ * @param id 函数 ID
+ * @returns 对应的函数或 undefined
+ */
+export function getProtocolMethod(msgId: proto.msg.MSG_ID): protocol_method | undefined {
+	return protocol_methods.get(msgId);
+}

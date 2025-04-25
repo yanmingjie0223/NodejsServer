@@ -5,13 +5,15 @@ import { AppRoom } from "./rooms/app-room";
 
 export default config({
 
-	options: {},
+	options: {
+
+	},
 
 	initializeTransport: (options) => new WebSocketTransport(options),
 
 	initializeGameServer: (gameServer) => {
 		/**
-		 * Define your room handlers:
+		 * Define your room handlers
 		 */
 		gameServer.define('app-room', AppRoom);
 

@@ -10,8 +10,10 @@ export const protobufPackage = "msg";
 
 export enum MSG_ID {
   NULL = 0,
+  /** Login_C2S_Login - 登录 */
   Login_C2S_Login = 100100,
-  Login_S2S_Login = 200100,
+  /** Login_S2C_Login - 登录返回 */
+  Login_S2C_Login = 200100,
   UNRECOGNIZED = -1,
 }
 
@@ -24,8 +26,8 @@ export function mSG_IDFromJSON(object: any): MSG_ID {
     case "Login_C2S_Login":
       return MSG_ID.Login_C2S_Login;
     case 200100:
-    case "Login_S2S_Login":
-      return MSG_ID.Login_S2S_Login;
+    case "Login_S2C_Login":
+      return MSG_ID.Login_S2C_Login;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -39,10 +41,41 @@ export function mSG_IDToJSON(object: MSG_ID): string {
       return "NULL";
     case MSG_ID.Login_C2S_Login:
       return "Login_C2S_Login";
-    case MSG_ID.Login_S2S_Login:
-      return "Login_S2S_Login";
+    case MSG_ID.Login_S2C_Login:
+      return "Login_S2C_Login";
     case MSG_ID.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
+  }
+}
+
+export enum RT_CODE {
+  /** SUSS - 成功 */
+  SUSS = 0,
+  /** ERROR - 失败 */
+  ERROR = -1,
+}
+
+export function rT_CODEFromJSON(object: any): RT_CODE {
+  switch (object) {
+    case 0:
+    case "SUSS":
+      return RT_CODE.SUSS;
+    case -1:
+    case "ERROR":
+      return RT_CODE.ERROR;
+    default:
+      return RT_CODE.ERROR;
+  }
+}
+
+export function rT_CODEToJSON(object: RT_CODE): string {
+  switch (object) {
+    case RT_CODE.SUSS:
+      return "SUSS";
+    case RT_CODE.ERROR:
+      return "ERROR";
+    default:
+      return "ERROR";
   }
 }

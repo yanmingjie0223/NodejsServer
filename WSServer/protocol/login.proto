@@ -3,10 +3,11 @@ syntax = "proto3";
 package msg.login;
 
 message C2S_Login {
-  string account = 1;
+	required string account = 1;
+	required string code = 2;
 }
 
 message S2C_Login {
-	int32 code = 1;
-	string message = 2;
+	required int32 code = 1;
+	required string message = 2;
 }

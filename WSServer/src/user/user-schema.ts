@@ -15,4 +15,7 @@ export class UserSchema extends Schema {
 
 	@type("number")
 	public updateTime: number;
+
+	@type("boolean")
+	public connected: boolean;
 }
