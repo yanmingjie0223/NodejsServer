@@ -5,6 +5,7 @@
 // source: msg.proto
 
 /* eslint-disable */
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "msg";
 
@@ -78,4 +79,127 @@ export function rT_CODEToJSON(object: RT_CODE): string {
     default:
       return "ERROR";
   }
+}
+
+export interface S2C_MSG {
+  code: RT_CODE;
+  mId: MSG_ID;
+  message: string;
+}
+
+function createBaseS2C_MSG(): S2C_MSG {
+  return { code: 0, mId: 0, message: "" };
+}
+
+export const S2C_MSG: MessageFns<S2C_MSG> = {
+  encode(message: S2C_MSG, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.code !== 0) {
+      writer.uint32(8).int32(message.code);
+    }
+    if (message.mId !== 0) {
+      writer.uint32(16).int32(message.mId);
+    }
+    if (message.message !== "") {
+      writer.uint32(26).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): S2C_MSG {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseS2C_MSG();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.code = reader.int32() as any;
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.mId = reader.int32() as any;
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): S2C_MSG {
+    return {
+      code: isSet(object.code) ? rT_CODEFromJSON(object.code) : 0,
+      mId: isSet(object.mId) ? mSG_IDFromJSON(object.mId) : 0,
+      message: isSet(object.message) ? globalThis.String(object.message) : "",
+    };
+  },
+
+  toJSON(message: S2C_MSG): unknown {
+    const obj: any = {};
+    if (message.code !== 0) {
+      obj.code = rT_CODEToJSON(message.code);
+    }
+    if (message.mId !== 0) {
+      obj.mId = mSG_IDToJSON(message.mId);
+    }
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<S2C_MSG>, I>>(base?: I): S2C_MSG {
+    return S2C_MSG.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<S2C_MSG>, I>>(object: I): S2C_MSG {
+    const message = createBaseS2C_MSG();
+    message.code = object.code ?? 0;
+    message.mId = object.mId ?? 0;
+    message.message = object.message ?? "";
+    return message;
+  },
+};
+
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -3,14 +3,12 @@ syntax = "proto3";
 package msg;
 
 enum MSG_ID {
-
 	NULL = 0;
 
 	// 登录
 	Login_C2S_Login = 100100;
 	// 登录返回
 	Login_S2C_Login = 200100;
-
 }
 
 enum RT_CODE {
@@ -21,7 +19,7 @@ enum RT_CODE {
 }
 
 message S2C_MSG {
-	required RT_CODE code = 1;
-	required MSG_ID mId = 2;
-	required string message = 3;
+	RT_CODE code = 1;
+	MSG_ID mId = 2;
+	string message = 3;
 }

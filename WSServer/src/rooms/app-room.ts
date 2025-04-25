@@ -9,8 +9,14 @@ export class AppRoom extends Room {
 
 	public state: AppSchema = new AppSchema();
 
-	public override onCreate(): void {
-		this.onMessage(MessageEvent.PROTO, this.onProtocol.bind(this));
+	public onCreate(): void {
+		this.onMessage(MessageEvent.PROTO, (client: Client, buff: Uint8Array) => {
+			dealProtocol(this, client, buff);
+		});
+	}
+
+	public onDispose(): void {
+		this.state.userMap.clear();
 	}
 
 	public async onAuth(client: Client<any, any>, options: any, context: AuthContext): Promise<boolean> {
@@ -22,7 +28,7 @@ export class AppRoom extends Room {
 		return null;
 	}
 
-	public override onJoin(client: Client): void {
+	public onJoin(client: Client): void {
 		const sessionId = client.sessionId;
 		const userMap = this.state.userMap;
 		if (!userMap.has(sessionId)) {
@@ -32,7 +38,7 @@ export class AppRoom extends Room {
 		}
 	}
 
-	public override async onLeave(client: Client, consented: boolean): Promise<void> {
+	public async onLeave(client: Client, consented: boolean): Promise<void> {
 		const userMap = this.state.userMap;
 		const sessionId = client.sessionId;
 		if (userMap.has(sessionId)) {
@@ -47,10 +53,6 @@ export class AppRoom extends Room {
 				userMap.delete(client.sessionId);
 			}
 		}
-	}
-
-	private onProtocol(client: Client, buff: Uint8Array): void {
-		dealProtocol(this, client, buff);
 	}
 
 }

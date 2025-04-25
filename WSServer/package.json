@@ -52,6 +52,9 @@
     "@colyseus/ws-transport": "^0.16.4",
     "colyseus": "^0.16.0",
     "cors": "^2.8.5",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "typeorm": "^0.3.22",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

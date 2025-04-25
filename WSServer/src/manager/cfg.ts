@@ -1,3 +1,4 @@
+import { logger } from "colyseus";
 import Singleton from "../base/singleton";
 import ByteBuf from "../luban/bright/serialization/ByteBuf";
 import * as cfg from "../luban/lubancode/schema";
@@ -18,7 +19,7 @@ export class Config extends Singleton {
 		}
 
 		this.tables = new cfg.Tables(this.getFileData.bind(this));
-		console.log("> config load complete ");
+		logger.info("> config load complete ");
 	}
 
 	private getFileData(fileName: string): ByteBuf {

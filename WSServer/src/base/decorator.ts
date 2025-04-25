@@ -12,10 +12,9 @@ const protocol_methods = new Map<number, protocol_method>();
  */
 export function protocolMethod(msgId: proto.msg.MSG_ID): Function {
 	return function (target: any, context?: any) {
-		if (typeof target === 'function') {
-			protocol_methods.set(msgId, target);
-		} else if (context?.kind === 'method') {
-			protocol_methods.set(msgId, target[context.name]);
+		const method = target[context];
+		if (method) {
+			protocol_methods.set(msgId, method);
 		}
 	};
 }

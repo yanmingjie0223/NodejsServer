@@ -11,6 +11,7 @@ export const protobufPackage = "msg.login";
 
 export interface C2S_Login {
   account: string;
+  code: string;
 }
 
 export interface S2C_Login {
@@ -19,13 +20,16 @@ export interface S2C_Login {
 }
 
 function createBaseC2S_Login(): C2S_Login {
-  return { account: "" };
+  return { account: "", code: "" };
 }
 
 export const C2S_Login: MessageFns<C2S_Login> = {
   encode(message: C2S_Login, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.account !== "") {
       writer.uint32(10).string(message.account);
+    }
+    if (message.code !== "") {
+      writer.uint32(18).string(message.code);
     }
     return writer;
   },
@@ -45,6 +49,14 @@ export const C2S_Login: MessageFns<C2S_Login> = {
           message.account = reader.string();
           continue;
         }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.code = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -55,13 +67,19 @@ export const C2S_Login: MessageFns<C2S_Login> = {
   },
 
   fromJSON(object: any): C2S_Login {
-    return { account: isSet(object.account) ? globalThis.String(object.account) : "" };
+    return {
+      account: isSet(object.account) ? globalThis.String(object.account) : "",
+      code: isSet(object.code) ? globalThis.String(object.code) : "",
+    };
   },
 
   toJSON(message: C2S_Login): unknown {
     const obj: any = {};
     if (message.account !== "") {
       obj.account = message.account;
+    }
+    if (message.code !== "") {
+      obj.code = message.code;
     }
     return obj;
   },
@@ -72,6 +90,7 @@ export const C2S_Login: MessageFns<C2S_Login> = {
   fromPartial<I extends Exact<DeepPartial<C2S_Login>, I>>(object: I): C2S_Login {
     const message = createBaseC2S_Login();
     message.account = object.account ?? "";
+    message.code = object.code ?? "";
     return message;
   },
 };
