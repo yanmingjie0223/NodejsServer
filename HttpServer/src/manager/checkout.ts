@@ -11,7 +11,7 @@ export class Checkout extends Singleton {
 	 * @param res
 	 * @returns
 	 */
-	async getLoginData<T extends C2S_Base_Login>(req: CRequest, res: CResponse): Promise<T | null> {
+	public async getLoginData<T extends C2S_Base_Login>(req: CRequest, res: CResponse): Promise<T | null> {
 		const data = await this.getData<C2S_Base_Login>(req, res);
 		if (!data) {
 			return null;
@@ -36,7 +36,7 @@ export class Checkout extends Singleton {
 	 * @param res
 	 * @returns
 	 */
-	async getData<T extends C2S_Base>(req: CRequest, res: CResponse): Promise<T | null> {
+	public async getData<T extends C2S_Base>(req: CRequest, res: CResponse): Promise<T | null> {
 		const kvBody = req.body;
 		try {
 			const data = JSON.parse(kvBody.data);

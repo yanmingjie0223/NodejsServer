@@ -6,6 +6,7 @@
         "rootDir": ".",
         "strict": false,
         "esModuleInterop": true,
+		"experimentalDecorators": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true
     },

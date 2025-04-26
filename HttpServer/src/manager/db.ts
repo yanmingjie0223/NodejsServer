@@ -1,8 +1,8 @@
 import * as typeorm from "typeorm";
 import { serverConfig } from "./server-config";
 import { logger } from "./log";
-import userSchema from "../model/user-schema";
 import Singleton from "../base/singleton";
+import { UserEntity } from "../model/user-entity";
 
 export class DB extends Singleton {
 
@@ -19,7 +19,7 @@ export class DB extends Singleton {
 			synchronize: true,
 			logging: false,
 			entities: [
-				userSchema,
+				UserEntity,
 			]
 		});
 		source.initialize()
