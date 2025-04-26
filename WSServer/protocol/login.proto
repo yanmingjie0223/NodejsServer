@@ -2,12 +2,15 @@ syntax = "proto3";
 
 package msg.login;
 
+import "msg.proto";
+
 message C2S_Login {
-	string account = 1;
+	string nickname = 1;
 	string code = 2;
+	PlatformType platform = 3;
 }
 
 message S2C_Login {
-	int32 code = 1;
+	MsgCode code = 1;
 	string message = 2;
 }

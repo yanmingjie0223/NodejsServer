@@ -1,19 +1,22 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "user" })
 export class UserEntity {
 	@PrimaryGeneratedColumn()
 	public uid: number
 
-	@Column()
+	@Column('varchar')
 	public nickname: string;
 
-	@Column()
+	@Column('varchar')
 	public openId: string;
 
-	@Column("bigint")
+	@Column('bigint')
 	public createTime: number;
 
-	@Column("bigint")
+	@Column('bigint')
 	public updateTime: number;
+
+	@Column('boolean')
+	public connected: boolean;
 }

@@ -5,6 +5,8 @@ import { AppRoom } from "./rooms/app-room";
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 import * as path from "path";
+import { db } from "./manager/db";
+import { Config } from "./manager/cfg";
 
 export default config({
 
@@ -34,12 +36,10 @@ export default config({
 	initializeTransport: (options) => new WebSocketTransport(options),
 
 	initializeGameServer: (gameServer) => {
-		/**
-		 * Define your room handlers
-		 */
 		gameServer.define('app-room', AppRoom);
-
 		gameServer.define('lobby', LobbyRoom);
+		db.getConnection();
+		Config.getInstance();
 	},
 
 	initializeExpress: (app) => { },

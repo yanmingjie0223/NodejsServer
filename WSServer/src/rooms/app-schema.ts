@@ -1,7 +1,6 @@
-import { MapSchema, Schema, type } from "@colyseus/schema";
-import { UserSchema } from "../user/user-schema";
+import { Schema } from "@colyseus/schema";
+import { UserEntity } from "../db/user-entity";
 
 export class AppSchema extends Schema {
-	@type({ map: UserSchema })
-	public userMap: MapSchema<UserSchema, string> = new MapSchema();
+	public userMap: Map<string, UserEntity> = new Map();
 }

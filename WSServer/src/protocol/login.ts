@@ -6,30 +6,35 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { MsgCode, msgCodeFromJSON, msgCodeToJSON, PlatformType, platformTypeFromJSON, platformTypeToJSON } from "./msg";
 
 export const protobufPackage = "msg.login";
 
 export interface C2S_Login {
-  account: string;
+  nickname: string;
   code: string;
+  platform: PlatformType;
 }
 
 export interface S2C_Login {
-  code: number;
+  code: MsgCode;
   message: string;
 }
 
 function createBaseC2S_Login(): C2S_Login {
-  return { account: "", code: "" };
+  return { nickname: "", code: "", platform: 0 };
 }
 
 export const C2S_Login: MessageFns<C2S_Login> = {
   encode(message: C2S_Login, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.account !== "") {
-      writer.uint32(10).string(message.account);
+    if (message.nickname !== "") {
+      writer.uint32(10).string(message.nickname);
     }
     if (message.code !== "") {
       writer.uint32(18).string(message.code);
+    }
+    if (message.platform !== 0) {
+      writer.uint32(24).int32(message.platform);
     }
     return writer;
   },
@@ -46,7 +51,7 @@ export const C2S_Login: MessageFns<C2S_Login> = {
             break;
           }
 
-          message.account = reader.string();
+          message.nickname = reader.string();
           continue;
         }
         case 2: {
@@ -55,6 +60,14 @@ export const C2S_Login: MessageFns<C2S_Login> = {
           }
 
           message.code = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.platform = reader.int32() as any;
           continue;
         }
       }
@@ -68,18 +81,22 @@ export const C2S_Login: MessageFns<C2S_Login> = {
 
   fromJSON(object: any): C2S_Login {
     return {
-      account: isSet(object.account) ? globalThis.String(object.account) : "",
+      nickname: isSet(object.nickname) ? globalThis.String(object.nickname) : "",
       code: isSet(object.code) ? globalThis.String(object.code) : "",
+      platform: isSet(object.platform) ? platformTypeFromJSON(object.platform) : 0,
     };
   },
 
   toJSON(message: C2S_Login): unknown {
     const obj: any = {};
-    if (message.account !== "") {
-      obj.account = message.account;
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
     }
     if (message.code !== "") {
       obj.code = message.code;
+    }
+    if (message.platform !== 0) {
+      obj.platform = platformTypeToJSON(message.platform);
     }
     return obj;
   },
@@ -89,8 +106,9 @@ export const C2S_Login: MessageFns<C2S_Login> = {
   },
   fromPartial<I extends Exact<DeepPartial<C2S_Login>, I>>(object: I): C2S_Login {
     const message = createBaseC2S_Login();
-    message.account = object.account ?? "";
+    message.nickname = object.nickname ?? "";
     message.code = object.code ?? "";
+    message.platform = object.platform ?? 0;
     return message;
   },
 };
@@ -122,7 +140,7 @@ export const S2C_Login: MessageFns<S2C_Login> = {
             break;
           }
 
-          message.code = reader.int32();
+          message.code = reader.int32() as any;
           continue;
         }
         case 2: {
@@ -144,7 +162,7 @@ export const S2C_Login: MessageFns<S2C_Login> = {
 
   fromJSON(object: any): S2C_Login {
     return {
-      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
+      code: isSet(object.code) ? msgCodeFromJSON(object.code) : 0,
       message: isSet(object.message) ? globalThis.String(object.message) : "",
     };
   },
@@ -152,7 +170,7 @@ export const S2C_Login: MessageFns<S2C_Login> = {
   toJSON(message: S2C_Login): unknown {
     const obj: any = {};
     if (message.code !== 0) {
-      obj.code = Math.round(message.code);
+      obj.code = msgCodeToJSON(message.code);
     }
     if (message.message !== "") {
       obj.message = message.message;

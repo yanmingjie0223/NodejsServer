@@ -26,6 +26,16 @@ REM 执行编译
 
 if exist "%OUT_DIR%" (
     cd "%OUT_DIR%"
+	for %%i in (*.ts) do (
+		set name=%%i
+		set tsName=!name:~0,-3!
+		if not "!tsName!"=="index" (
+			if not exist "%CUR_PATH%%PROTO_DIR%\!tsName!.proto" (
+				del /q /s "%CUR_PATH%%OUT_DIR%\!tsName!.ts"
+			)
+		)
+	)
+
 	for %%i in (*.meta) do (
 		set name=%%i
 		set tsName=!name:~0,-5!

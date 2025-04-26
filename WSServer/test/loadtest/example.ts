@@ -29,8 +29,8 @@ export async function main(options: Options) {
 	});
 
 	const loginData = proto.login.C2S_Login.create();
-	loginData.account = "ymj";
-	sendProtocol(room as any, proto.msg.MSG_ID.Login_C2S_Login, loginData);
+	loginData.nickname = "ymj";
+	sendProtocol(room as any, proto.msg.MsgId.Login_C2S_Login, loginData);
 }
 
 cli(main);

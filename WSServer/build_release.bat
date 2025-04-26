@@ -8,6 +8,8 @@ rd /q /s !BUILD_PATH!
 call npx tsc
 xcopy /s /i /y %CUR_PATH%src\luban\lubandata %BUILD_PATH%src\luban\lubandata
 
+copy %CUR_PATH%ecosystem.config.js %BUILD_PATH%ecosystem.config.js
+
 :toEnd
 echo end
 pause

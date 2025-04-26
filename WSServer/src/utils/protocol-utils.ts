@@ -34,8 +34,8 @@ export function getProtocol<T>(buff: Uint8Array): T {
  * @param id
  * @returns
  */
-export function getProtocolClass(id: proto.msg.MSG_ID): any {
-	const idName = proto.msg.MSG_ID[id];
+export function getProtocolClass(id: proto.msg.MsgId): any {
+	const idName = proto.msg.MsgId[id];
 	if (!idName) {
 		console.error(`msg.proto中未找到协议 id: ${id}`);
 		return null;
@@ -70,7 +70,7 @@ export function getProtocolClass(id: proto.msg.MSG_ID): any {
  * @param protoObj
  * @returns
  */
-export function getProtocolBuff(id: proto.msg.MSG_ID, protoObj: any): Uint8Array {
+export function getProtocolBuff(id: proto.msg.MsgId, protoObj: any): Uint8Array {
 	const protoClass = getProtocolClass(id);
 	if (!protoClass) {
 		return null;
@@ -90,7 +90,7 @@ export function getProtocolBuff(id: proto.msg.MSG_ID, protoObj: any): Uint8Array
  * @param buff
  * @returns
  */
-export function dealProtocol(room: Room, client: Client, buff: Uint8Array): void {
+export async function dealProtocol(room: Room, client: Client, buff: Uint8Array): Promise<void> {
 	// 先解析协议id
 	const reader = new BinaryReader(buff);
 	reader.uint32();
@@ -107,7 +107,9 @@ export function dealProtocol(room: Room, client: Client, buff: Uint8Array): void
 
 	const protoObj = protoClass.decode(reader);
 	const protocolMethod = getProtocolMethod(id);
-	protocolMethod && protocolMethod(room, client, protoObj);
+	if (protocolMethod) {
+		await protocolMethod(room, client, protoObj);
+	}
 }
 
 /**
@@ -117,7 +119,7 @@ export function dealProtocol(room: Room, client: Client, buff: Uint8Array): void
  * @param protoObj
  * @returns
  */
-export function sendProtocol(client: Client, id: proto.msg.MSG_ID, protoObj: any): void {
+export function sendProtocol(client: Client, id: proto.msg.MsgId, protoObj: any): void {
 	const buff = getProtocolBuff(id, protoObj);
 	if (!buff) {
 		return;

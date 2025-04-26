@@ -9,8 +9,10 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "msg";
 
-export enum MSG_ID {
+export enum MsgId {
   NULL = 0,
+  /** Msg_S2C_Msg - 回应协议 */
+  Msg_S2C_Msg = 100,
   /** Login_C2S_Login - 登录 */
   Login_C2S_Login = 100100,
   /** Login_S2C_Login - 登录返回 */
@@ -18,81 +20,121 @@ export enum MSG_ID {
   UNRECOGNIZED = -1,
 }
 
-export function mSG_IDFromJSON(object: any): MSG_ID {
+export function msgIdFromJSON(object: any): MsgId {
   switch (object) {
     case 0:
     case "NULL":
-      return MSG_ID.NULL;
+      return MsgId.NULL;
+    case 100:
+    case "Msg_S2C_Msg":
+      return MsgId.Msg_S2C_Msg;
     case 100100:
     case "Login_C2S_Login":
-      return MSG_ID.Login_C2S_Login;
+      return MsgId.Login_C2S_Login;
     case 200100:
     case "Login_S2C_Login":
-      return MSG_ID.Login_S2C_Login;
+      return MsgId.Login_S2C_Login;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return MSG_ID.UNRECOGNIZED;
+      return MsgId.UNRECOGNIZED;
   }
 }
 
-export function mSG_IDToJSON(object: MSG_ID): string {
+export function msgIdToJSON(object: MsgId): string {
   switch (object) {
-    case MSG_ID.NULL:
+    case MsgId.NULL:
       return "NULL";
-    case MSG_ID.Login_C2S_Login:
+    case MsgId.Msg_S2C_Msg:
+      return "Msg_S2C_Msg";
+    case MsgId.Login_C2S_Login:
       return "Login_C2S_Login";
-    case MSG_ID.Login_S2C_Login:
+    case MsgId.Login_S2C_Login:
       return "Login_S2C_Login";
-    case MSG_ID.UNRECOGNIZED:
+    case MsgId.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
-export enum RT_CODE {
+export enum MsgCode {
   /** SUSS - 成功 */
   SUSS = 0,
   /** ERROR - 失败 */
   ERROR = -1,
 }
 
-export function rT_CODEFromJSON(object: any): RT_CODE {
+export function msgCodeFromJSON(object: any): MsgCode {
   switch (object) {
     case 0:
     case "SUSS":
-      return RT_CODE.SUSS;
+      return MsgCode.SUSS;
     case -1:
     case "ERROR":
-      return RT_CODE.ERROR;
+      return MsgCode.ERROR;
     default:
-      return RT_CODE.ERROR;
+      return MsgCode.ERROR;
   }
 }
 
-export function rT_CODEToJSON(object: RT_CODE): string {
+export function msgCodeToJSON(object: MsgCode): string {
   switch (object) {
-    case RT_CODE.SUSS:
+    case MsgCode.SUSS:
       return "SUSS";
-    case RT_CODE.ERROR:
+    case MsgCode.ERROR:
       return "ERROR";
     default:
       return "ERROR";
   }
 }
 
-export interface S2C_MSG {
-  code: RT_CODE;
-  mId: MSG_ID;
+export enum PlatformType {
+  /** LOCAL - 本地 */
+  LOCAL = 0,
+  /** WX_MINI - 微信小游戏 */
+  WX_MINI = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function platformTypeFromJSON(object: any): PlatformType {
+  switch (object) {
+    case 0:
+    case "LOCAL":
+      return PlatformType.LOCAL;
+    case 1:
+    case "WX_MINI":
+      return PlatformType.WX_MINI;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return PlatformType.UNRECOGNIZED;
+  }
+}
+
+export function platformTypeToJSON(object: PlatformType): string {
+  switch (object) {
+    case PlatformType.LOCAL:
+      return "LOCAL";
+    case PlatformType.WX_MINI:
+      return "WX_MINI";
+    case PlatformType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface S2C_Msg {
+  code: MsgCode;
+  mId: MsgId;
   message: string;
 }
 
-function createBaseS2C_MSG(): S2C_MSG {
+function createBaseS2C_Msg(): S2C_Msg {
   return { code: 0, mId: 0, message: "" };
 }
 
-export const S2C_MSG: MessageFns<S2C_MSG> = {
-  encode(message: S2C_MSG, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const S2C_Msg: MessageFns<S2C_Msg> = {
+  encode(message: S2C_Msg, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.code !== 0) {
       writer.uint32(8).int32(message.code);
     }
@@ -105,10 +147,10 @@ export const S2C_MSG: MessageFns<S2C_MSG> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): S2C_MSG {
+  decode(input: BinaryReader | Uint8Array, length?: number): S2C_Msg {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseS2C_MSG();
+    const message = createBaseS2C_Msg();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -145,21 +187,21 @@ export const S2C_MSG: MessageFns<S2C_MSG> = {
     return message;
   },
 
-  fromJSON(object: any): S2C_MSG {
+  fromJSON(object: any): S2C_Msg {
     return {
-      code: isSet(object.code) ? rT_CODEFromJSON(object.code) : 0,
-      mId: isSet(object.mId) ? mSG_IDFromJSON(object.mId) : 0,
+      code: isSet(object.code) ? msgCodeFromJSON(object.code) : 0,
+      mId: isSet(object.mId) ? msgIdFromJSON(object.mId) : 0,
       message: isSet(object.message) ? globalThis.String(object.message) : "",
     };
   },
 
-  toJSON(message: S2C_MSG): unknown {
+  toJSON(message: S2C_Msg): unknown {
     const obj: any = {};
     if (message.code !== 0) {
-      obj.code = rT_CODEToJSON(message.code);
+      obj.code = msgCodeToJSON(message.code);
     }
     if (message.mId !== 0) {
-      obj.mId = mSG_IDToJSON(message.mId);
+      obj.mId = msgIdToJSON(message.mId);
     }
     if (message.message !== "") {
       obj.message = message.message;
@@ -167,11 +209,11 @@ export const S2C_MSG: MessageFns<S2C_MSG> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<S2C_MSG>, I>>(base?: I): S2C_MSG {
-    return S2C_MSG.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<S2C_Msg>, I>>(base?: I): S2C_Msg {
+    return S2C_Msg.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<S2C_MSG>, I>>(object: I): S2C_MSG {
-    const message = createBaseS2C_MSG();
+  fromPartial<I extends Exact<DeepPartial<S2C_Msg>, I>>(object: I): S2C_Msg {
+    const message = createBaseS2C_Msg();
     message.code = object.code ?? 0;
     message.mId = object.mId ?? 0;
     message.message = object.message ?? "";

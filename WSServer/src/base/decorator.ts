@@ -7,10 +7,10 @@ const protocol_methods = new Map<number, protocol_method>();
 /**
  * 协议装饰器
  * @export
- * @param {proto.msg.MSG_ID} msgId
+ * @param {proto.msg.MsgId} msgId
  * @return {Function}
  */
-export function protocolMethod(msgId: proto.msg.MSG_ID): Function {
+export function protocolMethod(msgId: proto.msg.MsgId): Function {
 	return function (target: any, context?: any) {
 		const method = target[context];
 		if (method) {
@@ -24,6 +24,6 @@ export function protocolMethod(msgId: proto.msg.MSG_ID): Function {
  * @param id 函数 ID
  * @returns 对应的函数或 undefined
  */
-export function getProtocolMethod(msgId: proto.msg.MSG_ID): protocol_method | undefined {
+export function getProtocolMethod(msgId: proto.msg.MsgId): protocol_method | undefined {
 	return protocol_methods.get(msgId);
 }
