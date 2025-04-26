@@ -1,4 +1,4 @@
-import { Room, Client } from "colyseus";
+import { Room, Client, logger } from "colyseus";
 import * as proto from "../protocol/index";
 import { BinaryWriter, BinaryReader } from "@bufbuild/protobuf/wire";
 import { MessageEvent } from "../rooms/message-event";
@@ -15,7 +15,7 @@ export function getProtocol<T>(buff: Uint8Array): T {
 	reader.uint32();
 	const id = reader.int32();
 	if (!id) {
-		console.error(`该buff解析错误 检查是否为已写入协议id头的buff`);
+		logger.error(`This buff parsing error checks whether the protocol id header has been written`);
 		return null;
 	}
 
@@ -37,27 +37,27 @@ export function getProtocol<T>(buff: Uint8Array): T {
 export function getProtocolClass(id: proto.msg.MsgId): any {
 	const idName = proto.msg.MsgId[id];
 	if (!idName) {
-		console.error(`msg.proto中未找到协议 id: ${id}`);
+		logger.error(`not found in msg.proto. id: ${id}`);
 		return null;
 	}
 
 	const idNameArr = idName.split("_");
 	if (idNameArr.length < 3) {
-		console.error(`协议名定义: 协议包_协议发送方式c2s或者s2c_协议名字 例如: Login_C2S_Login`);
+		logger.error(`Protocol naming: Protocol-pkg_end-to-end_protocol-name. for example: Login_C2S_Login`);
 		return null;
 	}
 
 	const pkgName = idNameArr.shift().toLowerCase();
 	const pkgClass = (proto as any)[pkgName];
 	if (!pkgClass) {
-		console.error(`未找到定义文件的协议包: ${pkgName}.proto`);
+		logger.error(`not found protocol pkg: ${pkgName}.proto`);
 		return null;
 	}
 
 	const protoName = idNameArr.join('_');
 	const protoClass = pkgClass[protoName];
 	if (!protoClass) {
-		console.error(`未在${pkgName}.proto找到协议: ${protoName}`);
+		logger.error(`not found in ${pkgName}.proto: ${protoName}`);
 		return null;
 	}
 
@@ -96,7 +96,7 @@ export async function dealProtocol(room: Room, client: Client, buff: Uint8Array)
 	reader.uint32();
 	const id = reader.int32();
 	if (!id) {
-		console.error(`该buff解析错误 检查是否为已写入协议id头的buff`);
+		logger.error(`This buff parsing error checks whether the protocol id header has been written`);
 		return null;
 	}
 

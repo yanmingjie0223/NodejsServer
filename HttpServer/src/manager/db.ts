@@ -28,7 +28,7 @@ export class DB extends Singleton {
 				console.log(`> Connecting ${serverConfig.db.type} on ${serverConfig.db.host}:${serverConfig.db.port}`);
 			})
 			.catch((e: Error) => {
-				logger.error('数据库启动失败:', e);
+				logger.error('database startup failed:', e);
 			});
 	}
 

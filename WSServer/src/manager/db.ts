@@ -27,7 +27,7 @@ export class DB extends Singleton {
 				logger.info(`> Connecting ${process.env.DB_TYPE} on ${process.env.DB_HOST}:${process.env.DB_PORT}`);
 			})
 			.catch((e: Error) => {
-				logger.error('数据库启动失败:', e);
+				logger.error('database startup failed:', e);
 			});
 	}
 
