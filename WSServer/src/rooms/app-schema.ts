@@ -1,6 +1,6 @@
 import { Schema } from "@colyseus/schema";
-import { UserEntity } from "../db/user-entity";
+import { User } from "../db/user";
 
 export class AppSchema extends Schema {
-	public userMap: Map<string, UserEntity> = new Map();
+	public userMap: Map<string, User> = new Map();
 }

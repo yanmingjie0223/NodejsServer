@@ -19,4 +19,7 @@ export class UserEntity {
 
 	@Column('boolean')
 	public connected: boolean;
+
+	@Column('binary')
+	public data: Buffer;
 }

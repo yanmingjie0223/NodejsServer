@@ -1,6 +1,6 @@
 import * as proto from "../protocol/index";
 import { Room, Client } from "colyseus";
-type protocol_method = (room: Room, client: Client, protoObj: any) => void;
+type protocol_method = (protoObj: any, client: Client, room: Room) => void;
 
 const protocol_methods = new Map<number, protocol_method>();
 

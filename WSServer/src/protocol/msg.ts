@@ -123,11 +123,92 @@ export function platformTypeToJSON(object: PlatformType): string {
   }
 }
 
+export interface UserData {
+  nickname: string;
+  openId: string;
+}
+
 export interface S2C_Msg {
   code: MsgCode;
   mId: MsgId;
   message: string;
 }
+
+function createBaseUserData(): UserData {
+  return { nickname: "", openId: "" };
+}
+
+export const UserData: MessageFns<UserData> = {
+  encode(message: UserData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.nickname !== "") {
+      writer.uint32(10).string(message.nickname);
+    }
+    if (message.openId !== "") {
+      writer.uint32(18).string(message.openId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): UserData {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserData();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.nickname = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.openId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserData {
+    return {
+      nickname: isSet(object.nickname) ? globalThis.String(object.nickname) : "",
+      openId: isSet(object.openId) ? globalThis.String(object.openId) : "",
+    };
+  },
+
+  toJSON(message: UserData): unknown {
+    const obj: any = {};
+    if (message.nickname !== "") {
+      obj.nickname = message.nickname;
+    }
+    if (message.openId !== "") {
+      obj.openId = message.openId;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserData>, I>>(base?: I): UserData {
+    return UserData.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserData>, I>>(object: I): UserData {
+    const message = createBaseUserData();
+    message.nickname = object.nickname ?? "";
+    message.openId = object.openId ?? "";
+    return message;
+  },
+};
 
 function createBaseS2C_Msg(): S2C_Msg {
   return { code: 0, mId: 0, message: "" };

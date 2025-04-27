@@ -42,7 +42,8 @@ export class AppRoom extends Room {
 		const userMap = this.state.userMap;
 		const sessionId = client.sessionId;
 		if (userMap.has(sessionId)) {
-			const entity = userMap.get(sessionId);
+			const user = userMap.get(sessionId);
+			const entity = user.entity;
 			entity.connected = false;
 			try {
 				if (consented) {

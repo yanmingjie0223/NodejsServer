@@ -47,11 +47,11 @@ export function getGlobalFloat(key: string): number {
  * @param key
  * @returns
  */
-export function getGlobalString(key: string) {
+export function getGlobalString(key: string): string {
 	const tables = config.tables;
 	const item = tables.TbGlobal.get(key);
 	if (!item) {
-		return 0;
+		return '';
 	}
 
 	return item.content;

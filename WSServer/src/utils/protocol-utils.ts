@@ -108,7 +108,7 @@ export async function dealProtocol(room: Room, client: Client, buff: Uint8Array)
 	const protoObj = protoClass.decode(reader);
 	const protocolMethod = getProtocolMethod(id);
 	if (protocolMethod) {
-		await protocolMethod(room, client, protoObj);
+		await protocolMethod(protoObj, client, room);
 	}
 }
 

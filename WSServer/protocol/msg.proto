@@ -28,6 +28,11 @@ enum PlatformType {
 	WX_MINI = 1;
 }
 
+message UserData {
+	string nickname = 1;
+	string openId = 2;
+}
+
 message S2C_Msg {
 	MsgCode code = 1;
 	MsgId mId = 2;
