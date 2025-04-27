@@ -1,37 +1,38 @@
 import { Client, Room } from "colyseus";
 import { AppSchema } from "./app-schema";
-import { dealProtocol } from "../utils/protocol-utils";
 import { MessageEvent } from "./message-event";
 import { checkoutSecret } from "../config/auth";
-import { db } from "../manager/db";
-import { UserEntity } from "../db/user-entity";
+import { MessageQueue } from "./message-queue";
 
 export class AppRoom extends Room {
 
+	/**房间状态数据 */
 	public state: AppSchema = new AppSchema();
-
-	/**消息buff队列 */
-	public msgBuffs: Array<Uint8Array> = [];
-	/**消息client队列 */
-	public msgClients: Array<Client> = [];
-	/**是否在处理消息中 */
-	public msging: boolean = false;
+	/**消息buffer队列 */
+	public msgQueue: MessageQueue;
 
 	public onCreate(): void {
-		this.onMessage(MessageEvent.PROTO, (client: Client, buff: Uint8Array) => {
-			this.msgClients.push(client);
-			this.msgBuffs.push(buff);
-			this.onDealMsg();
+		this.msgQueue = new MessageQueue(this);
+		this.onMessage(MessageEvent.LOGIN, (client: Client, uint8s: Uint8Array) => {
+			this.msgQueue.push(uint8s, client);
+		});
+		this.onMessage(MessageEvent.PROTO, (client: Client, uint8s: Uint8Array) => {
+			const sessionId = client.sessionId;
+			const user = this.state.userSessionMap.get(sessionId);
+			if (user) {
+				user.addMeesage(uint8s, client);
+			}
 		});
 	}
 
 	public onDispose(): void {
-		this.state.userMap.clear();
+		this.state.userSessionMap.clear();
+		this.state.userOpenIdMap.clear();
 	}
 
 	public async onAuth(client: Client<any, any>, options: any): Promise<boolean> {
 		const sessionId = client.sessionId;
-		const userMap = this.state.userMap;
+		const userMap = this.state.userSessionMap;
 		if (!userMap.has(sessionId) && checkoutSecret(options.secret)) {
 			return true;
 		}
@@ -39,7 +40,7 @@ export class AppRoom extends Room {
 	}
 
 	public async onLeave(client: Client, consented: boolean): Promise<void> {
-		const userMap = this.state.userMap;
+		const userMap = this.state.userSessionMap;
 		const sessionId = client.sessionId;
 		if (userMap.has(sessionId)) {
 			const user = userMap.get(sessionId);
@@ -52,30 +53,11 @@ export class AppRoom extends Room {
 				await this.allowReconnection(client, 20);
 				entity.connected = true;
 			} catch (e) {
-				if (entity) {
-					const userRepository = db.getConnection().getRepository(UserEntity);
-					userRepository.save(entity);
-				}
+				user.save();
+				this.state.userOpenIdMap.delete(user.userData.openId);
 				userMap.delete(sessionId);
 
 			}
-		}
-	}
-
-	private async onDealMsg(): Promise<void> {
-		if (this.msging) {
-			return;
-		}
-
-		const client = this.msgClients.shift();
-		const buff = this.msgBuffs.shift();
-		if (client && buff) {
-			this.msging = true;
-			await dealProtocol(this, client, buff);
-			this.onDealMsg();
-		}
-		else {
-			this.msging = false;
 		}
 	}
 

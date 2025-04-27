@@ -19,7 +19,7 @@ export class Config extends Singleton {
 		}
 
 		this.tables = new cfg.Tables(this.getFileData.bind(this));
-		logger.info("> config load complete ");
+		logger.info("✅ config load complete ");
 	}
 
 	private getFileData(fileName: string): ByteBuf {

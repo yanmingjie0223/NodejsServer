@@ -14,12 +14,12 @@ export class ProtocolLogin {
 	 */
 	@protocolMethod(proto.msg.MsgId.Login_C2S_Login)
 	public async onMessageLogin(protoObj: proto.login.C2S_Login, client: Client, room: AppRoom) {
-		const userMap = room.state.userMap;
+		const userMap = room.state.userSessionMap;
 		const sessionId = client.sessionId;
 		if (!userMap.has(sessionId)) {
 			let user: User;
 			switch (protoObj.platform) {
-				case proto.msg.PlatformType.LOCAL:
+				case proto.msg.PlatformType.H5:
 					user = await onNicknameLogin(protoObj.nickname, protoObj.nickname, client, room);
 					break;
 				case proto.msg.PlatformType.WX_MINI:
@@ -29,7 +29,12 @@ export class ProtocolLogin {
 					console.error(`unprocessed type: { PLATFORM_TYPE: ${protoObj.platform}}`);
 					break;
 			}
+			if (user.client && user.client.sessionId !== sessionId) {
+				user.client.leave();
+			}
 			if (user) {
+				user.client = client;
+				room.state.userOpenIdMap.set(user.userData.openId, user);
 				userMap.set(sessionId, user);
 			}
 			else {
@@ -37,6 +42,7 @@ export class ProtocolLogin {
 				const errorData = proto.msg.S2C_Msg.create();
 				errorData.code = proto.msg.MsgCode.ERROR;
 				sendProtocol(client, proto.msg.MsgId.Msg_S2C_Msg, errorData);
+				client.leave();
 			}
 		}
 	}
@@ -52,8 +58,12 @@ export class ProtocolLogin {
  * @returns
  */
 async function onNicknameLogin(openId: string, nickname: string, client: Client, room: Room): Promise<User> {
-	const user = new User();
-	await user.initialize(openId, nickname, client, room);
+	const userMap = room.state.userOpenIdMap;
+	let user = userMap.get(openId);
+	if (!user) {
+		user = new User();
+		await user.initialize(openId, nickname, client, room);
+	}
 	return user;
 }
 
@@ -74,11 +84,13 @@ async function onWxOpenIdLogin(code: string, nickname: string, client: Client, r
 	});
 
 	let resData = await request('https://api.weixin.qq.com/sns/jscode2session?' + urlData);
-	resData = JSON.parse(resData);
-	if (!!resData["session_key"] && !!resData['openid']) {
-		const openId = resData['openid'];
-		const user = await onNicknameLogin(openId, nickname, client, room);
-		return user;
+	if (resData) {
+		resData = JSON.parse(resData);
+		if (!!resData["session_key"] && !!resData['openid']) {
+			const openId = resData['openid'];
+			const user = await onNicknameLogin(openId, nickname, client, room);
+			return user;
+		}
 	}
 	return null;
 }

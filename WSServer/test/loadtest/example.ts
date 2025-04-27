@@ -2,6 +2,7 @@ import { Client, Room } from "colyseus.js";
 import { cli, Options } from "@colyseus/loadtest";
 import * as proto from "../../src/protocol/index";
 import { getProtocol, sendProtocol } from "../../src/utils/protocol-utils";
+import { MessageEvent } from "../../src/rooms/message-event";
 
 /**
  * 连接测试
@@ -30,7 +31,7 @@ export async function main(options: Options) {
 
 	const loginData = proto.login.C2S_Login.create();
 	loginData.nickname = "ymj";
-	sendProtocol(room as any, proto.msg.MsgId.Login_C2S_Login, loginData);
+	sendProtocol(room as any, proto.msg.MsgId.Login_C2S_Login, loginData, MessageEvent.LOGIN);
 }
 
 cli(main);

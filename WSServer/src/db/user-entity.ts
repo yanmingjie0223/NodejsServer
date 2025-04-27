@@ -20,6 +20,6 @@ export class UserEntity {
 	@Column('boolean')
 	public connected: boolean;
 
-	@Column('binary')
+	@Column('mediumblob')
 	public data: Buffer;
 }

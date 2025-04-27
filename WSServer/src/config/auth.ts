@@ -1,5 +1,5 @@
 /**
- * 检查token
+ * 检查游戏密钥，防止其他软件恶意连接
  * @param secret
  * @returns
  */

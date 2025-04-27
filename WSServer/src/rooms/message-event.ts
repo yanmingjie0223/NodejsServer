@@ -3,4 +3,5 @@
  */
 export enum MessageEvent {
 	PROTO = "proto",
+	LOGIN = 'login',
 }

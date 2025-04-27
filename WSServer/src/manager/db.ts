@@ -24,7 +24,7 @@ export class DB extends Singleton {
 		source.initialize()
 			.then(() => {
 				this.ioDB = source;
-				logger.info(`> Connecting ${process.env.DB_TYPE} on ${process.env.DB_HOST}:${process.env.DB_PORT}`);
+				logger.info(`✅ Connecting ${process.env.DB_TYPE} on ${process.env.DB_HOST}:${process.env.DB_PORT}`);
 			})
 			.catch((e: Error) => {
 				logger.error('database startup failed:', e);

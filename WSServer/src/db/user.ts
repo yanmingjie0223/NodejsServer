@@ -2,6 +2,7 @@ import { Client, Room } from "colyseus";
 import { UserEntity } from "./user-entity";
 import { db } from "../manager/db";
 import * as proto from "../protocol/index";
+import { MessageQueue } from "../rooms/message-queue";
 
 export class User {
 
@@ -13,6 +14,12 @@ export class User {
 	private _client: Client;
 	/**用户所在的房间 */
 	private _room: Room;
+	/**消息队列 */
+	private _msgQueue: MessageQueue;
+
+	public set client(value: Client) {
+		this._client = value;
+	}
 
 	public get client(): Client {
 		return this._client;
@@ -30,6 +37,10 @@ export class User {
 		return this._room;
 	}
 
+	public addMeesage(uint8s: Uint8Array, client: Client): void {
+		this._msgQueue.push(uint8s, client);
+	}
+
 	public async initialize(
 		openId: string,
 		nickname: string,
@@ -38,6 +49,7 @@ export class User {
 	): Promise<void> {
 		this._client = client;
 		this._room = room;
+		this._msgQueue = new MessageQueue(room);
 
 		if (!this._entity) {
 			const userRepository = db.getConnection().getRepository(UserEntity);

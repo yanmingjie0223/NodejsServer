@@ -119,10 +119,15 @@ export async function dealProtocol(room: Room, client: Client, buff: Uint8Array)
  * @param protoObj
  * @returns
  */
-export function sendProtocol(client: Client, id: proto.msg.MsgId, protoObj: any): void {
+export function sendProtocol(
+	client: Client,
+	id: proto.msg.MsgId,
+	protoObj: any,
+	event: MessageEvent = MessageEvent.PROTO
+): void {
 	const buff = getProtocolBuff(id, protoObj);
 	if (!buff) {
 		return;
 	}
-	client.send(MessageEvent.PROTO, buff);
+	client.send(event, buff);
 }

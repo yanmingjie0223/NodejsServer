@@ -23,7 +23,7 @@ enum MsgCode {
 
 enum PlatformType {
 	// 本地
-	LOCAL = 0;
+	H5 = 0;
 	// 微信小游戏
 	WX_MINI = 1;
 }
