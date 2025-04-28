@@ -13,13 +13,13 @@ export function getProtocol<T>(uint8s: Uint8Array): T {
 	// 先解析协议id
 	const reader = new BinaryReader(uint8s);
 	reader.uint32();
-	const id = reader.int32();
-	if (!id) {
+	const msgId = reader.int32();
+	if (!msgId) {
 		logger.error(`This Uint8Array parsing error checks whether the protocol id header has been written`);
 		return null;
 	}
 
-	const protoClass = getProtocolClass(id);
+	const protoClass = getProtocolClass(msgId);
 	if (!protoClass) {
 		return null;
 	}
@@ -31,13 +31,13 @@ export function getProtocol<T>(uint8s: Uint8Array): T {
 
 /**
  * Obtain the protocol Class based on the protocol id
- * @param id
+ * @param msgId
  * @returns
  */
-export function getProtocolClass(id: proto.msg.MsgId): any {
-	const idName = proto.msg.MsgId[id];
+export function getProtocolClass(msgId: proto.msg.MsgId): any {
+	const idName = proto.msg.MsgId[msgId];
 	if (!idName) {
-		logger.error(`not found in msg.proto. id: ${id}`);
+		logger.error(`not found in msg.proto. id: ${msgId}`);
 		return null;
 	}
 
@@ -66,18 +66,18 @@ export function getProtocolClass(id: proto.msg.MsgId): any {
 
 /**
  * Obtain the transmission Uint8Array based on the protocol id and protocol object
- * @param id
+ * @param msgId
  * @param protoObj
  * @returns
  */
-export function getProtocolUint8Array(id: proto.msg.MsgId, protoObj: any): Uint8Array {
-	const protoClass = getProtocolClass(id);
+export function getProtocolUint8Array(msgId: proto.msg.MsgId, protoObj: any): Uint8Array {
+	const protoClass = getProtocolClass(msgId);
 	if (!protoClass) {
 		return null;
 	}
 	// 先添加协议id为协议头
 	const writer = new BinaryWriter();
-	writer.uint32(8).int32(id);
+	writer.uint32(8).int32(msgId);
 	protoClass.encode(protoObj, writer);
 	const uint8s = writer.finish();
 	return uint8s;
@@ -98,19 +98,19 @@ export async function dealProtocol(room: Room, client: Client, uint8s: Uint8Arra
 	// 先解析协议id
 	const reader = new BinaryReader(uint8s);
 	reader.uint32();
-	const id = reader.int32();
-	if (!id) {
+	const msgId = reader.int32();
+	if (!msgId) {
 		logger.error(`This Uint8Array parsing error checks whether the protocol id header has been written`);
 		return null;
 	}
 
-	const protoClass = getProtocolClass(id);
+	const protoClass = getProtocolClass(msgId);
 	if (!protoClass) {
 		return null;
 	}
 
 	const protoObj = protoClass.decode(reader);
-	const protocolMethod = getProtocolMethod(id);
+	const protocolMethod = getProtocolMethod(msgId);
 	if (protocolMethod) {
 		await protocolMethod(protoObj, client, room);
 	}
@@ -119,17 +119,18 @@ export async function dealProtocol(room: Room, client: Client, uint8s: Uint8Arra
 /**
  * Send protocol data
  * @param client
- * @param id
+ * @param msgId
  * @param protoObj
+ * @param event
  * @returns
  */
 export function sendProtocol(
 	client: Client,
-	id: proto.msg.MsgId,
+	msgId: proto.msg.MsgId,
 	protoObj: any,
 	event: MessageEvent = MessageEvent.PROTO
 ): void {
-	const uint8s = getProtocolUint8Array(id, protoObj);
+	const uint8s = getProtocolUint8Array(msgId, protoObj);
 	if (!uint8s) {
 		return;
 	}
