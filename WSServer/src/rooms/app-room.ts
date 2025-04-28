@@ -7,7 +7,7 @@ import { MessageQueue } from "./message-queue";
 export class AppRoom extends Room {
 
 	/**room state */
-	public state: AppSchema = new AppSchema();
+	public state: AppSchema;
 
 	/**login message queue */
 	private _msgQueue: MessageQueue;
@@ -19,8 +19,6 @@ export class AppRoom extends Room {
 	}
 
 	public override onBeforeShutdown(): void {
-		super.onBeforeShutdown();
-
 		this._active = false;
 		const delay = this.clock.setInterval(() => {
 			const hasMessageCount = this.state.onBeforeShutdown();
@@ -33,6 +31,7 @@ export class AppRoom extends Room {
 
 	public onCreate(): void {
 		this._active = true;
+		this.state = new AppSchema();
 		this._msgQueue = new MessageQueue(this);
 		this.onMessage(MessageEvent.LOGIN, (client: Client, uint8s: Uint8Array) => {
 			this._msgQueue.push(uint8s, client);
