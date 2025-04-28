@@ -6,11 +6,9 @@
 	"main": "build/index.js",
 	"scripts": {
 		"tsx": "tsx watch src/index.ts",
-		"loadtest": "tsx test/loadtest/example.ts --room app-room --numClients 2",
+		"loadtest": "tsx test/load-test.ts --room app-room --numClients 2",
 		"build": "tsc",
-		"test": "mocha -r tsx ts-node/register test/**_test.ts --exit --timeout 15000",
-		"schema-codegen": "schema-codegen src/rooms/schema/* --csharp --output ../Assets/Example/",
-
+		"test": "mocha -r tsx ts-node/register test/**-test.ts --exit --timeout 15000",
 		"list": "pm2 ls",
 		"start": "pm2 start ecosystem.config.js",
 		"stop": "pm2 stop ws-server",

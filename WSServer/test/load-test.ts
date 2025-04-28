@@ -1,8 +1,8 @@
 import { Client, Room } from "colyseus.js";
 import { cli, Options } from "@colyseus/loadtest";
-import * as proto from "../../src/protocol/index";
-import { getProtocol, sendProtocol } from "../../src/utils/protocol-utils";
-import { MessageEvent } from "../../src/rooms/message-event";
+import * as proto from "../src/protocol/index";
+import { getProtocol, sendProtocol } from "../src/utils/protocol-utils";
+import { MessageEvent } from "../src/rooms/message-event";
 
 /**
  * 连接测试

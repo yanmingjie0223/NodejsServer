@@ -1,4 +1,4 @@
-import { Client, Room } from "colyseus";
+import { Client, logger, Room } from "colyseus";
 import { UserEntity } from "./user-entity";
 import { db } from "../manager/db";
 import * as proto from "../protocol/index";
@@ -6,15 +6,17 @@ import { MessageQueue } from "../rooms/message-queue";
 
 export class User {
 
-	/**用户对应的数据库对象 */
+	/**The database entity corresponding to the user */
 	private _entity: UserEntity;
-	/**用户数据 */
+	/**user data */
 	private _userData: proto.msg.UserData;
-	/**用户连接的客户端 */
+	/**user data dirty marking */
+	private _dirty: boolean;
+	/**The client connected by the user */
 	private _client: Client;
-	/**用户所在的房间 */
+	/**The room where the user is*/
 	private _room: Room;
-	/**消息队列 */
+	/**user message queue */
 	private _msgQueue: MessageQueue;
 
 	public set client(value: Client) {
@@ -37,16 +39,15 @@ export class User {
 		return this._room;
 	}
 
+	public get msgQueue(): MessageQueue {
+		return this._msgQueue;
+	}
+
 	public addMeesage(uint8s: Uint8Array, client: Client): void {
 		this._msgQueue.push(uint8s, client);
 	}
 
-	public async initialize(
-		openId: string,
-		nickname: string,
-		client: Client,
-		room: Room
-	): Promise<void> {
+	public async initialize(openId: string, nickname: string, client: Client, room: Room): Promise<void> {
 		this._client = client;
 		this._room = room;
 		this._msgQueue = new MessageQueue(room);
@@ -79,17 +80,29 @@ export class User {
 		if (!this._entity) {
 			return;
 		}
+		if (!this._dirty) {
+			return;
+		}
 
 		const userRepository = db.getConnection().getRepository(UserEntity);
 		this.entity.data = this.getUserDataBuffer();
-		await userRepository.save(this.entity);
+		if (this.entity.data) {
+			await userRepository.save(this.entity);
+			this._dirty = false;
+		}
 	}
 
 	private getUserDataBuffer(): Buffer {
-		const writer = proto.msg.UserData.encode(this._userData);
-		const uint8Array = writer.finish();
-		const buffer = Buffer.from(uint8Array);
-		return buffer;
+		try {
+			const writer = proto.msg.UserData.encode(this._userData);
+			const uint8Array = writer.finish();
+			const buffer = Buffer.from(uint8Array);
+			return buffer;
+		}
+		catch (err) {
+			logger.error(`err: buffer encode`, JSON.stringify(this._userData));
+		}
+		return null;
 	}
 
 	private getUserData(buffer: Buffer): proto.msg.UserData {

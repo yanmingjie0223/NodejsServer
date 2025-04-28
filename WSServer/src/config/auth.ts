@@ -1,5 +1,5 @@
 /**
- * 检查游戏密钥，防止其他软件恶意连接
+ * Check the game key to prevent malicious connections from other software
  * @param secret
  * @returns
  */

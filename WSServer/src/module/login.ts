@@ -1,4 +1,4 @@
-import { Client, logger, Room } from "colyseus";
+import { Client, logger } from "colyseus";
 import { protocolMethod } from "../base/decorator";
 import * as proto from "../protocol/index";
 import { AppRoom } from "../rooms/app-room";
@@ -10,14 +10,13 @@ import { User } from "../db/user";
 export class ProtocolLogin {
 
 	/**
-	 * 登录协议处理
+	 * Login protocol processing
 	 */
 	@protocolMethod(proto.msg.MsgId.Login_C2S_Login)
-	public async onMessageLogin(protoObj: proto.login.C2S_Login, client: Client, room: AppRoom) {
-		const userMap = room.state.userSessionMap;
+	public async onMessageLogin(protoObj: proto.login.C2S_Login, client: Client, room: AppRoom): Promise<void> {
 		const sessionId = client.sessionId;
-		if (!userMap.has(sessionId)) {
-			let user: User;
+		let user: User = room.state.getBySessionId(sessionId);
+		if (!user) {
 			switch (protoObj.platform) {
 				case proto.msg.PlatformType.H5:
 					user = await onNicknameLogin(protoObj.nickname, protoObj.nickname, client, room);
@@ -34,8 +33,7 @@ export class ProtocolLogin {
 			}
 			if (user) {
 				user.client = client;
-				room.state.userOpenIdMap.set(user.userData.openId, user);
-				userMap.set(sessionId, user);
+				room.state.set(sessionId, user.userData.openId, user);
 			}
 			else {
 				logger.error(`not found user: {account: ${protoObj.nickname}, code: ${protoObj.code}} `);
@@ -50,16 +48,15 @@ export class ProtocolLogin {
 }
 
 /**
- * 用户名登录
+ * use nickname login
  * @param openId
  * @param nickname
  * @param client
  * @param room
  * @returns
  */
-async function onNicknameLogin(openId: string, nickname: string, client: Client, room: Room): Promise<User> {
-	const userMap = room.state.userOpenIdMap;
-	let user = userMap.get(openId);
+async function onNicknameLogin(openId: string, nickname: string, client: Client, room: AppRoom): Promise<User> {
+	let user = room.state.getByOpenId(openId);
 	if (!user) {
 		user = new User();
 		await user.initialize(openId, nickname, client, room);
@@ -68,14 +65,14 @@ async function onNicknameLogin(openId: string, nickname: string, client: Client,
 }
 
 /**
- * 微信获取openid登录
+ * use wechat code login
  * @param code
  * @param nickname
  * @param client
  * @param room
  * @returns
  */
-async function onWxOpenIdLogin(code: string, nickname: string, client: Client, room: Room): Promise<User> {
+async function onWxOpenIdLogin(code: string, nickname: string, client: Client, room: AppRoom): Promise<User> {
 	const urlData = querystring.stringify({
 		appid: process.env.WX_APP_ID,
 		secret: process.env.WX_SECRET,

@@ -1,21 +1,21 @@
-import { Room, Client, logger } from "colyseus";
+import { Client, logger, Room } from "colyseus";
 import * as proto from "../protocol/index";
 import { BinaryWriter, BinaryReader } from "@bufbuild/protobuf/wire";
 import { MessageEvent } from "../rooms/message-event";
 import { getProtocolMethod } from "../base/decorator";
 
 /**
- * 根据buff数据解析协议对象
- * @param buff
+ * Parse the protocol object based on the Uint8Array data
+ * @param uint8s
  * @returns
  */
-export function getProtocol<T>(buff: Uint8Array): T {
+export function getProtocol<T>(uint8s: Uint8Array): T {
 	// 先解析协议id
-	const reader = new BinaryReader(buff);
+	const reader = new BinaryReader(uint8s);
 	reader.uint32();
 	const id = reader.int32();
 	if (!id) {
-		logger.error(`This buff parsing error checks whether the protocol id header has been written`);
+		logger.error(`This Uint8Array parsing error checks whether the protocol id header has been written`);
 		return null;
 	}
 
@@ -30,7 +30,7 @@ export function getProtocol<T>(buff: Uint8Array): T {
 }
 
 /**
- * 根据协议id获取协议Class
+ * Obtain the protocol Class based on the protocol id
  * @param id
  * @returns
  */
@@ -65,12 +65,12 @@ export function getProtocolClass(id: proto.msg.MsgId): any {
 }
 
 /**
- * 根据协议id和协议对象获取传输buff
+ * Obtain the transmission Uint8Array based on the protocol id and protocol object
  * @param id
  * @param protoObj
  * @returns
  */
-export function getProtocolBuff(id: proto.msg.MsgId, protoObj: any): Uint8Array {
+export function getProtocolUint8Array(id: proto.msg.MsgId, protoObj: any): Uint8Array {
 	const protoClass = getProtocolClass(id);
 	if (!protoClass) {
 		return null;
@@ -79,24 +79,28 @@ export function getProtocolBuff(id: proto.msg.MsgId, protoObj: any): Uint8Array 
 	const writer = new BinaryWriter();
 	writer.uint32(8).int32(id);
 	protoClass.encode(protoObj, writer);
-	const buff = writer.finish();
-	return buff;
+	const uint8s = writer.finish();
+	return uint8s;
 }
 
 /**
- * 处理协议 装饰方法下运行
+ * Process protocol data
  * @param room
  * @param client
- * @param buff
+ * @param uint8s
  * @returns
  */
-export async function dealProtocol(room: Room, client: Client, buff: Uint8Array): Promise<void> {
+export async function dealProtocol(room: Room, client: Client, uint8s: Uint8Array): Promise<void> {
+	if (!room || !(room as any).active) {
+		logger.error(`not active room ${room.roomId} `);
+		return;
+	}
 	// 先解析协议id
-	const reader = new BinaryReader(buff);
+	const reader = new BinaryReader(uint8s);
 	reader.uint32();
 	const id = reader.int32();
 	if (!id) {
-		logger.error(`This buff parsing error checks whether the protocol id header has been written`);
+		logger.error(`This Uint8Array parsing error checks whether the protocol id header has been written`);
 		return null;
 	}
 
@@ -113,7 +117,7 @@ export async function dealProtocol(room: Room, client: Client, buff: Uint8Array)
 }
 
 /**
- * 发送协议
+ * Send protocol data
  * @param client
  * @param id
  * @param protoObj
@@ -125,9 +129,9 @@ export function sendProtocol(
 	protoObj: any,
 	event: MessageEvent = MessageEvent.PROTO
 ): void {
-	const buff = getProtocolBuff(id, protoObj);
-	if (!buff) {
+	const uint8s = getProtocolUint8Array(id, protoObj);
+	if (!uint8s) {
 		return;
 	}
-	client.send(event, buff);
+	client.send(event, uint8s);
 }

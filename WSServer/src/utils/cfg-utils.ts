@@ -1,7 +1,7 @@
 import { config } from "../manager/cfg";
 
 /**
- * 根据key获取global表int数据
+ * get global table int data
  * @param key
  * @returns
  */
@@ -22,7 +22,7 @@ export function getGlobalInt(key: string): number {
 }
 
 /**
- * 根据key获取global表float数据
+ * get global table float data
  * @param key
  * @returns
  */
@@ -43,7 +43,7 @@ export function getGlobalFloat(key: string): number {
 }
 
 /**
- * 根据key获取global表string数据
+ * get global table string data
  * @param key
  * @returns
  */

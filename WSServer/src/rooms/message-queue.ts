@@ -29,6 +29,20 @@ export class MessageQueue {
 		return this._messageItems.shift();
 	}
 
+	/**
+	 * Check whether there is a message
+	 * @returns
+	 */
+	public checkHasMessage(): boolean {
+		if (this._dealing) {
+			return true;
+		}
+		if (this._messageItems.length > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	public stop(): void {
 		this._isStop = true;
 	}
@@ -36,6 +50,11 @@ export class MessageQueue {
 	public resume(): void {
 		this._isStop = false;
 		this.deal();
+	}
+
+	public destroy(): void {
+		this._room = null;
+		this._messageItems.length = 0;
 	}
 
 	private async deal(): Promise<void> {
