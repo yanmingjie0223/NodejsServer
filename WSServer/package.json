@@ -21,7 +21,6 @@
 	},
 	"homepage": "https://github.com/colyseus/create-colyseus#readme",
 	"devDependencies": {
-		"@bufbuild/protobuf": "^2.2.5",
 		"@colyseus/loadtest": "^0.16.0",
 		"@colyseus/playground": "^0.16.0",
 		"@colyseus/testing": "^0.16.0",
@@ -45,6 +44,7 @@
 		"typescript": "^5.0.4"
 	},
 	"dependencies": {
+		"@bufbuild/protobuf": "^2.2.5",
 		"@colyseus/auth": "^0.16.0",
 		"@colyseus/core": "^0.16.0",
 		"@colyseus/monitor": "^0.16.0",
