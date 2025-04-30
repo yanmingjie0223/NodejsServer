@@ -4,7 +4,7 @@ import * as proto from "../protocol/index";
 import { AppRoom } from "../rooms/app-room";
 import request from 'request-promise';
 import querystring from "querystring";
-import { sendProtocol } from "../utils/protocol-utils";
+import { sendErrorProtocol } from "../utils/protocol-utils";
 import { User } from "../db/user";
 
 export class ProtocolLogin {
@@ -37,9 +37,7 @@ export class ProtocolLogin {
 			}
 			else {
 				logger.error(`not found user: {account: ${protoObj.nickname}, code: ${protoObj.code}} `);
-				const errorData = proto.msg.S2C_Msg.create();
-				errorData.code = proto.msg.MsgCode.ERROR;
-				sendProtocol(client, proto.msg.MsgId.Msg_S2C_Msg, errorData);
+				sendErrorProtocol(client, proto.msg.MsgId.Login_C2S_Login);
 				client.leave();
 			}
 		}

@@ -1,7 +1,7 @@
 set curPath=%~dp0
 set WORKSPACE=.\
 
-set LUBAN_DLL=%WORKSPACE%\tools\Luban\Luban.dll
+set LUBAN_DLL=%WORKSPACE%..\Tools\Luban\Luban.dll
 set CONF_ROOT=%WORKSPACE%..\Design\Datas
 
 dotnet %LUBAN_DLL% ^

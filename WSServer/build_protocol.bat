@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 set CUR_PATH=%~dp0
-set PROTOC=.\tools\protoc\bin\protoc.exe
+set PROTOC=..\Tools\protoc\bin\protoc.exe
 set PLUGIN=.\node_modules\.bin\protoc-gen-ts_proto.cmd
 set OUT_DIR=.\src\protocol
 set OUT_DIR_INDEX=.\src\protocol\index.ts

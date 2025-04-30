@@ -136,3 +136,17 @@ export function sendProtocol(
 	}
 	client.send(event, uint8s);
 }
+
+/**
+ * 发送错误协议
+ * @param client
+ * @param c2sMsgId
+ * @param message
+ */
+export function sendErrorProtocol(client: Client, c2sMsgId: proto.msg.MsgId, message: string = ''): void {
+	const errorData = proto.msg.S2C_Msg.create();
+	errorData.code = proto.msg.MsgCode.ERROR;
+	errorData.message = message;
+	errorData.mId = c2sMsgId;
+	sendProtocol(client, proto.msg.MsgId.Msg_S2C_Msg, errorData);
+}
