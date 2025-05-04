@@ -9,7 +9,7 @@ export class User {
 	/**The database entity corresponding to the user */
 	private _entity: UserEntity;
 	/**user data */
-	private _userData: proto.msg.UserData;
+	private _userData: proto.user.UserData;
 	/**user data dirty marking */
 	private _dirty: boolean;
 	/**The client connected by the user */
@@ -27,7 +27,7 @@ export class User {
 		return this._client;
 	}
 
-	public get userData(): proto.msg.UserData {
+	public get userData(): proto.user.UserData {
 		return this._userData;
 	}
 
@@ -63,7 +63,7 @@ export class User {
 				this._entity.openId = openId;
 				this._entity.nickname = nickname;
 				this._entity.createTime = ct;
-				this._userData = proto.msg.UserData.create();
+				this._userData = proto.user.UserData.create();
 				this.userData.nickname = nickname;
 				this.userData.openId = openId;
 			}
@@ -94,7 +94,7 @@ export class User {
 
 	private getUserDataBuffer(): Buffer {
 		try {
-			const writer = proto.msg.UserData.encode(this._userData);
+			const writer = proto.user.UserData.encode(this._userData);
 			const uint8Array = writer.finish();
 			const buffer = Buffer.from(uint8Array);
 			return buffer;
@@ -105,9 +105,9 @@ export class User {
 		return null;
 	}
 
-	private getUserData(buffer: Buffer): proto.msg.UserData {
+	private getUserData(buffer: Buffer): proto.user.UserData {
 		const uint8Array = new Uint8Array(buffer);
-		const userData = proto.msg.UserData.decode(uint8Array);
+		const userData = proto.user.UserData.decode(uint8Array);
 		return userData;
 	}
 

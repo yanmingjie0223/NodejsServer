@@ -23,7 +23,7 @@ export class Redis extends Singleton {
 			if (err) {
 				logger.error("Failed to connect to Redis:", err);
 			} else {
-				console.log(`> Connecting redis on ${serverConfig.redis.host}:${serverConfig.redis.port}`);
+				console.log(`✅ Connecting redis on ${serverConfig.redis.host}:${serverConfig.redis.port}`);
 			}
 		});
 	}

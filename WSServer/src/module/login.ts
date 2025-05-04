@@ -12,8 +12,8 @@ export class ProtocolLogin {
 	/**
 	 * Login protocol processing
 	 */
-	@protocolMethod(proto.msg.MsgId.Login_C2S_Login)
-	public async onMessageLogin(protoObj: proto.login.C2S_Login, client: Client, room: AppRoom): Promise<void> {
+	@protocolMethod(proto.msg.MsgId.User_C2S_Login)
+	public async onMessageLogin(protoObj: proto.user.C2S_Login, client: Client, room: AppRoom): Promise<void> {
 		const sessionId = client.sessionId;
 		let user: User = room.state.getBySessionId(sessionId);
 		if (!user) {
@@ -37,7 +37,7 @@ export class ProtocolLogin {
 			}
 			else {
 				logger.error(`not found user: {account: ${protoObj.nickname}, code: ${protoObj.code}} `);
-				sendErrorProtocol(client, proto.msg.MsgId.Login_C2S_Login);
+				sendErrorProtocol(client, proto.msg.MsgId.User_C2S_Login);
 				client.leave();
 			}
 		}

@@ -17,7 +17,7 @@ export async function main(options: Options) {
 	console.log("joined successfully!");
 
 	room.onMessage("proto", (buff: Uint8Array) => {
-		const protoObj = getProtocol<proto.login.S2C_Login>(buff);
+		const protoObj = getProtocol<proto.user.S2C_Login>(buff);
 		console.log(protoObj);
 
 		room.onLeave((code) => {
@@ -29,9 +29,9 @@ export async function main(options: Options) {
 		// console.log("state change:", state);
 	});
 
-	const loginData = proto.login.C2S_Login.create();
+	const loginData = proto.user.C2S_Login.create();
 	loginData.nickname = "ymj";
-	sendProtocol(room as any, proto.msg.MsgId.Login_C2S_Login, loginData, MessageEvent.LOGIN);
+	sendProtocol(room as any, proto.msg.MsgId.User_C2S_Login, loginData, MessageEvent.LOGIN);
 }
 
 cli(main);

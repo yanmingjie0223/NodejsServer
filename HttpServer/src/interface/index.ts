@@ -15,7 +15,7 @@ export interface CRequest extends Request {
 	logger: Logger;
 	config: Config;
 	checkout: Checkout;
-	body: { data: string };
+	body: Uint8Array;
 }
 
 /**

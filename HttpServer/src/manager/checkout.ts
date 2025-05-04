@@ -1,7 +1,8 @@
 import Singleton from "../base/singleton";
 import * as encry from '../util/encry';
+import * as proto from "../protocol/index";
 import { CRequest, CResponse } from "../interface/index";
-import { C2S_Base, C2S_Base_Login } from "../interface/protocol";
+import { getProtocol, sendErrorProtocol } from "../util/protocol-utils";
 
 export class Checkout extends Singleton {
 
@@ -11,8 +12,8 @@ export class Checkout extends Singleton {
 	 * @param res
 	 * @returns
 	 */
-	public async getLoginData<T extends C2S_Base_Login>(req: CRequest, res: CResponse): Promise<T | null> {
-		const data = await this.getData<C2S_Base_Login>(req, res);
+	public async getLoginData<T>(req: CRequest, res: CResponse): Promise<T | null> {
+		const data: any = await this.getData<T>(req, res);
 		if (!data) {
 			return null;
 		}
@@ -23,7 +24,7 @@ export class Checkout extends Singleton {
 		const redis_token = await req.redis.get(reidsKey);
 
 		if (token !== redis_token) {
-			res.end(JSON.stringify({ code: -1, errMsg: 'token auth failed' }));
+			sendErrorProtocol(res, proto.msg.MsgId.NULL, 'token auth failed');
 			return null;
 		}
 
@@ -36,13 +37,17 @@ export class Checkout extends Singleton {
 	 * @param res
 	 * @returns
 	 */
-	public async getData<T extends C2S_Base>(req: CRequest, res: CResponse): Promise<T | null> {
-		const kvBody = req.body;
+	public async getData<T>(req: CRequest, res: CResponse): Promise<T | null> {
+		if (!req.body) {
+			sendErrorProtocol(res, proto.msg.MsgId.NULL, 'upload data is not json data');
+			return null;
+		}
+
 		try {
-			const data = JSON.parse(kvBody.data);
+			const data = getProtocol(req.body);
 			return data as T;
 		} catch (error) {
-			res.end(JSON.stringify({ code: -1, errMsg: 'upload data is not json data' }));
+			sendErrorProtocol(res, proto.msg.MsgId.NULL, 'upload data is not json data');
 			return null;
 		}
 	}

@@ -12,7 +12,6 @@ import { getProtocolMethod } from "../base/decorator";
 export function getProtocol<T>(uint8s: Uint8Array): T {
 	// 先解析协议id
 	const reader = new BinaryReader(uint8s);
-	reader.uint32();
 	const msgId = reader.int32();
 	if (!msgId) {
 		logger.error(`This Uint8Array parsing error checks whether the protocol id header has been written`);
@@ -77,7 +76,7 @@ export function getProtocolUint8Array(msgId: proto.msg.MsgId, protoObj: any): Ui
 	}
 	// 先添加协议id为协议头
 	const writer = new BinaryWriter();
-	writer.uint32(8).int32(msgId);
+	writer.int32(msgId);
 	protoClass.encode(protoObj, writer);
 	const uint8s = writer.finish();
 	return uint8s;
@@ -97,7 +96,6 @@ export async function dealProtocol(room: Room, client: Client, uint8s: Uint8Arra
 	}
 	// 先解析协议id
 	const reader = new BinaryReader(uint8s);
-	reader.uint32();
 	const msgId = reader.int32();
 	if (!msgId) {
 		logger.error(`This Uint8Array parsing error checks whether the protocol id header has been written`);

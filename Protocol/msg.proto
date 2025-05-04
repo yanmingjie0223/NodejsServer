@@ -1,5 +1,4 @@
 syntax = "proto3";
-
 package msg;
 
 enum MsgId {
@@ -9,14 +8,14 @@ enum MsgId {
 	Msg_S2C_Msg = 100;
 
 	// 登录
-	Login_C2S_Login = 100100;
+	User_C2S_Login = 100100;
 	// 登录返回
-	Login_S2C_Login = 200100;
+	User_S2C_Login = 200100;
 }
 
 enum MsgCode {
 	// 成功
-	SUSS = 0;
+	SUCC = 0;
 	// 失败
 	ERROR = -1;
 }
@@ -26,11 +25,6 @@ enum PlatformType {
 	H5 = 0;
 	// 微信小游戏
 	WX_MINI = 1;
-}
-
-message UserData {
-	string nickname = 1;
-	string openId = 2;
 }
 
 message S2C_Msg {
