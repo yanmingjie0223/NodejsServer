@@ -10,7 +10,7 @@ import { getProtocolMethod } from "../base/decorator";
  * @returns
  */
 export function getProtocol<T>(uint8s: Uint8Array): T {
-	// 先解析协议id
+	// Parse protocol id
 	const reader = new BinaryReader(uint8s);
 	const msgId = reader.int32();
 	if (!msgId) {
@@ -74,7 +74,7 @@ export function getProtocolUint8Array(msgId: proto.msg.MsgId, protoObj: any): Ui
 	if (!protoClass) {
 		return null;
 	}
-	// 先添加协议id为协议头
+	// Write protocol id
 	const writer = new BinaryWriter();
 	writer.int32(msgId);
 	protoClass.encode(protoObj, writer);
@@ -94,7 +94,7 @@ export async function dealProtocol(room: Room, client: Client, uint8s: Uint8Arra
 		logger.error(`not active room ${room.roomId} `);
 		return;
 	}
-	// 先解析协议id
+	// Parse protocol id
 	const reader = new BinaryReader(uint8s);
 	const msgId = reader.int32();
 	if (!msgId) {
@@ -136,7 +136,7 @@ export function sendProtocol(
 }
 
 /**
- * 发送错误协议
+ * Send the wrong protocol
  * @param client
  * @param c2sMsgId
  * @param message

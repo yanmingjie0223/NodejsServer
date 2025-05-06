@@ -2,7 +2,7 @@ import { ncb } from "../luban/lubancode/schema";
 import { config } from "../manager/cfg";
 
 /**
- * 根据key获取global全局单例数据
+ * Obtain the global singleton data
  * @param key
  * @returns
  */
