@@ -1,20 +1,25 @@
-# Welcome to Colyseus!
+## 安装依赖软件
+- mysql + redis + nginx + node
+    - mysql
+        - 8.0.41(latest8.0.34)
+		- 数据库属性
+			- utf8mb4 -- UTF-8 Unicode
+			- utf8mb4_0900_ai_ci
+    - nginx
+        - 1.20.1(latest1.27.4)
+        - ssl配置
+    - node
+        - 16.20.2(lastest22.14.0lts)
+        - node 16后不需要make安装直接配置路径即可
 
-This project has been created using [⚔️ `create-colyseus-app`](https://github.com/colyseus/create-colyseus-app/) - an npm init template for kick starting a Colyseus project in TypeScript.
+## 运行
+- build_data.bat 打包更新表配置数据
+- build_dev.bat 编译构建运行版本
+- build_protocol.bat 构建协议生成代码
+- build_release.bat 构建发布版本
 
-[Documentation](http://docs.colyseus.io/)
+## 调试
+- build后debug启动dev-debug即可调试断点ts
 
-## :crossed_swords: Usage
-
-```
-npm start
-```
-
-## Structure
-
-- `package.json`:
-    - `scripts`:
-        - `npm start`: runs `ts-node-dev index.ts`
-        - `npm test`: runs mocha test suite
-        - `npm run loadtest`: runs the [`@colyseus/loadtest`](https://github.com/colyseus/colyseus-loadtest/) tool for testing the connection, using the `test/loadtest/example.ts` script.
-- `tsconfig.json`: TypeScript configuration file
+## 测试
+- test/load-test.ts 测试房间连接合消息发送

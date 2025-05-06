@@ -17,6 +17,7 @@
 ## 运行
 - build_data.bat 打包更新表配置数据
 - build_dev.bat 编译构建运行版本
+- build_protocol.bat 构建协议生成代码
 - build_release.bat 构建发布版本
 
 ## 调试
