@@ -1,8 +1,8 @@
 import * as proto from "../protocol/index";
 import { Room, Client } from "colyseus";
-type protocol_method = (protoObj: any, client: Client, room: Room) => void;
+type protocolMethodFunc = (protoObj: any, client: Client, room: Room) => Promise<void>;
 
-const protocol_methods = new Map<number, protocol_method>();
+const protocol_methods = new Map<number, protocolMethodFunc>();
 
 /**
  * Protocol decorator
@@ -24,6 +24,6 @@ export function protocolMethod(msgId: proto.msg.MsgId): Function {
  * @param {proto.msg.MsgId} msgId
  * @returns
  */
-export function getProtocolMethod(msgId: proto.msg.MsgId): protocol_method | undefined {
+export function getProtocolMethod(msgId: proto.msg.MsgId): protocolMethodFunc | undefined {
 	return protocol_methods.get(msgId);
 }
