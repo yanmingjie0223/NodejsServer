@@ -1,44 +1,44 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "http small server",
-  "main": "./dist/index.js",
-  "scripts": {
-    "dev-start": "pm2 start dist/index.js",
-    "kill-all": "pm2 kill",
-    "list": "pm2 ls",
-    "start": "pm2 start ecosystem.config.js",
-    "stop": "pm2 stop server",
-    "reload": "pm2 reload server"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/blueimp-md5": "^2.18.2",
-    "@types/node": "^22.13.5",
-    "@types/polka": "^0.5.7",
-    "@types/request-promise": "^4.1.51",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
-    "eslint": "^7.28.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-typescript": "^0.14.0",
-    "prettier": "^2.3.1",
-    "ts-proto": "^2.7.0",
-    "typescript": "^5.7.3"
-  },
-  "dependencies": {
-    "@bufbuild/protobuf": "^2.2.5",
-    "blueimp-md5": "^2.10.0",
-    "ioredis": "^5.5.0",
-    "log4js": "5.1.0",
-    "mysql": "^2.15.0",
-    "pm2": "^6.0.6",
-    "polka": "^0.5.2",
-    "reflect-metadata": "^0.2.2",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.2",
-    "typeorm": "^0.3.20"
-  }
+	"name": "server",
+	"version": "1.0.0",
+	"description": "http small server",
+	"main": "./dist/index.js",
+	"scripts": {
+		"dev-start": "pm2 start dist/index.js",
+		"kill-all": "pm2 kill",
+		"list": "pm2 ls",
+		"start": "pm2 start ecosystem.config.js",
+		"stop": "pm2 stop server",
+		"reload": "pm2 reload server"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/blueimp-md5": "^2.18.2",
+		"@types/node": "^22.13.5",
+		"@types/polka": "^0.5.7",
+		"@types/request-promise": "^4.1.51",
+		"@typescript-eslint/eslint-plugin": "^4.26.1",
+		"@typescript-eslint/parser": "^4.26.1",
+		"eslint": "^7.28.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.4.0",
+		"eslint-plugin-typescript": "^0.14.0",
+		"prettier": "^2.3.1",
+		"ts-proto": "^2.7.0",
+		"typescript": "^5.7.3"
+	},
+	"dependencies": {
+		"@bufbuild/protobuf": "^2.2.5",
+		"blueimp-md5": "^2.10.0",
+		"ioredis": "^5.5.0",
+		"log4js": "5.1.0",
+		"mysql": "^2.15.0",
+		"pm2": "^6.0.6",
+		"polka": "^0.5.2",
+		"reflect-metadata": "^0.2.2",
+		"request": "^2.88.2",
+		"request-promise": "^4.2.2",
+		"typeorm": "^0.3.20"
+	}
 }
