@@ -57,10 +57,12 @@ function middlewareBuffer(req: CRequest, res: CResponse, next: Next) {
 }
 
 /**
- * 优雅关闭 Redis和db 连接
+ * 优雅关闭，保证db和redis完整性
  */
-process.on("SIGINT", async () => {
+async function onShutdown() {
 	console.log("Received SIGINT signal, closing Redis And DB connection...");
+
+	process.off('message', onProcessMessage);
 	try {
 		const ioredis = redis.getConnection();
 		if (ioredis) {
@@ -73,13 +75,27 @@ process.on("SIGINT", async () => {
 		}
 		console.log("close redis and db!");
 	} catch (err) {
-		logger.error("Error closing Redis connection:", err);
+		console.error("Error closing Redis connection:", err);
 		process.exit(1);
 	} finally {
 		process.exit(0);
 	}
-});
+}
 
+/**
+ * 消息处理
+ * @param msg
+ */
+async function onProcessMessage(msg: string) {
+	if (msg === 'shutdown') {
+		await onShutdown();
+	}
+}
+
+process.once('SIGINT', onShutdown);
+process.once('SIGTERM', onShutdown);
+process.once('SIGQUIT', onShutdown);
+process.on('message', onProcessMessage);
 const app: polka.Polka = router(polka())
 	.use(middlewareBuffer as any)
 	.use(middleware as any)
@@ -90,6 +106,9 @@ const app: polka.Polka = router(polka())
  */
 export default function runApp() {
 	app.listen(serverConfig.port, () => {
-		console.log(`> Running on localhost:${serverConfig.port}`);
+		console.log(`✅ Running on localhost:${serverConfig.port}`);
+		if (process.send) {
+			process.send('ready');
+		}
 	});
 }
