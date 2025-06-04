@@ -63,6 +63,10 @@ async function onShutdown() {
 	console.log("Received SIGINT signal, closing Redis And DB connection...");
 
 	process.off('message', onProcessMessage);
+	process.off('SIGINT', onShutdown);
+	process.off('SIGTERM', onShutdown);
+	process.off('SIGQUIT', onShutdown);
+
 	try {
 		const ioredis = redis.getConnection();
 		if (ioredis) {
