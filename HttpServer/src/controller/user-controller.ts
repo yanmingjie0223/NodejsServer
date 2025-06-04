@@ -45,7 +45,7 @@ export async function login(req: CRequest, res: CResponse): Promise<void> {
 					user.openId = openId;
 					user.createTime = ct;
 				}
-				user.updateTime = ct;
+				user.setUpdateTime(ct);
 				user.setNickname(reqData.nickname);
 				user.setAvatarUrl(reqData.avatarUrl);
 				await user.save(userRepository);

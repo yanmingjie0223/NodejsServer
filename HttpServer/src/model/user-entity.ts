@@ -35,6 +35,10 @@ export class UserEntity {
 		this.userData = userData;
 	}
 
+	public initialize(): void {
+		this._userData = this.getUserDataByBuffer(this.userData);
+	}
+
 	public getUserData(): proto.user.UserData {
 		if (!this._userData) {
 			this.initialize();
@@ -71,8 +75,8 @@ export class UserEntity {
 		this.nickname = nickname;
 	}
 
-	public initialize(): void {
-		this._userData = this.getUserDataByBuffer(this.userData);
+	public setUpdateTime(ct: number): void {
+		this.updateTime = ct;
 	}
 
 	public reset(): void {
