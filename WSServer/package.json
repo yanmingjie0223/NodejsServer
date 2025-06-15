@@ -6,7 +6,7 @@
 	"main": "build/index.js",
 	"scripts": {
 		"tsx": "tsx watch src/index.ts",
-		"loadtest": "tsx test/load-test.ts --room app-room --numClients 2",
+		"loadtest": "tsx test/load-test.ts --room app-room --numClients 1",
 		"build": "tsc",
 		"test": "mocha -r tsx ts-node/register test/**-test.ts --exit --timeout 15000",
 		"list": "pm2 ls",

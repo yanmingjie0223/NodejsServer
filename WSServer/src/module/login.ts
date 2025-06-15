@@ -4,7 +4,7 @@ import * as proto from "../protocol/index";
 import { AppRoom } from "../rooms/app-room";
 import request from 'request-promise';
 import querystring from "querystring";
-import { sendErrorProtocol } from "../utils/protocol-utils";
+import { sendErrorProtocol, sendProtocol } from "../utils/protocol-utils";
 import { User } from "../db/user";
 
 export class ProtocolLogin {
@@ -34,6 +34,9 @@ export class ProtocolLogin {
 			if (user) {
 				user.client = client;
 				room.state.set(sessionId, user.userData.openId, user);
+				const s2c = proto.user.S2C_Login.create();
+				s2c.openId = user.userData.openId;
+				sendProtocol(client, proto.msg.MsgId.User_S2C_Login, s2c);
 			}
 			else {
 				logger.error(`not found user: {account: ${protoObj.nickname}, code: ${protoObj.code}} `);

@@ -16,8 +16,8 @@ export async function main(options: Options) {
 
 	console.log("joined successfully!");
 
-	room.onMessage("proto", (buff: Uint8Array) => {
-		const protoObj = getProtocol<proto.user.S2C_Login>(buff);
+	room.onMessage("proto", (uint8s: Uint8Array) => {
+		const protoObj = getProtocol<proto.user.S2C_Login>(uint8s);
 		console.log(protoObj);
 
 		room.onLeave((code) => {
