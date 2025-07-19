@@ -43,6 +43,45 @@ export class User {
 		return this._msgQueue;
 	}
 
+	public getOpenId(): string {
+		if (!this._entity) {
+			return "";
+		}
+		return this._entity.openId;
+	}
+
+	public setOpenId(openId: string): void {
+		if (!this._entity) {
+			return;
+		}
+
+		this._dirty = true;
+		this._entity.openId = openId;
+		this._userData.openId = openId;
+	}
+
+	public setAvatarUrl(avatarUrl: string): void {
+		if (!avatarUrl) {
+			return;
+		}
+		if (!this._entity) {
+			return;
+		}
+
+		this._dirty = true;
+		this._userData.avatarUrl = avatarUrl;
+	}
+
+	public setNickname(nickname: string): void {
+		if (!this._entity) {
+			return;
+		}
+
+		this._dirty = true;
+		this._entity.nickname = nickname;
+		this._userData.nickname = nickname;
+	}
+
 	public addMeesage(uint8s: Uint8Array, client: Client): void {
 		this._msgQueue.push(uint8s, client);
 	}
@@ -60,17 +99,16 @@ export class User {
 			const ct = Date.now();
 			if (!this._entity) {
 				this._entity = new UserEntity();
-				this._entity.openId = openId;
-				this._entity.nickname = nickname;
-				this._entity.createTime = ct;
+				this._entity.createAt = ct;
 				this._userData = proto.user.UserData.create();
-				this.userData.nickname = nickname;
-				this.userData.openId = openId;
+				this.setOpenId(openId);
 			}
 			else {
 				this._userData = this.getUserData(this._entity.data);
 			}
-			this._entity.updateTime = ct;
+
+			this.setNickname(nickname);
+			this._entity.updateAt = ct;
 			this._entity.connected = true;
 			await this.save();
 		}

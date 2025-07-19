@@ -91,8 +91,10 @@ export function msgCodeToJSON(object: MsgCode): string {
 export enum PlatformType {
   /** H5 - 本地 */
   H5 = 0,
-  /** WX_MINI - 微信小游戏 */
-  WX_MINI = 1,
+  /** WX - 微信小游戏 */
+  WX = 1,
+  /** DY - 抖音小游戏 */
+  DY = 2,
   UNRECOGNIZED = -1,
 }
 
@@ -102,8 +104,11 @@ export function platformTypeFromJSON(object: any): PlatformType {
     case "H5":
       return PlatformType.H5;
     case 1:
-    case "WX_MINI":
-      return PlatformType.WX_MINI;
+    case "WX":
+      return PlatformType.WX;
+    case 2:
+    case "DY":
+      return PlatformType.DY;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -115,8 +120,10 @@ export function platformTypeToJSON(object: PlatformType): string {
   switch (object) {
     case PlatformType.H5:
       return "H5";
-    case PlatformType.WX_MINI:
-      return "WX_MINI";
+    case PlatformType.WX:
+      return "WX";
+    case PlatformType.DY:
+      return "DY";
     case PlatformType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

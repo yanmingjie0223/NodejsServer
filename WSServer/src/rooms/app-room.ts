@@ -38,7 +38,7 @@ export class AppRoom extends Room {
 		});
 		this.onMessage(MessageEvent.PROTO, (client: Client, uint8s: Uint8Array) => {
 			const sessionId = client.sessionId;
-			const user = this.state.getBySessionId(sessionId);
+			const user = this.state.getUserBySessionId(sessionId);
 			if (user) {
 				user.addMeesage(uint8s, client);
 			}
@@ -52,7 +52,7 @@ export class AppRoom extends Room {
 
 	public async onAuth(client: Client<any, any>, options: any): Promise<boolean> {
 		const sessionId = client.sessionId;
-		const user = this.state.getBySessionId(sessionId);
+		const user = this.state.getUserBySessionId(sessionId);
 		if (!user && checkoutSecret(options.secret)) {
 			return true;
 		}
@@ -61,7 +61,7 @@ export class AppRoom extends Room {
 
 	public async onLeave(client: Client, consented: boolean): Promise<void> {
 		const sessionId = client.sessionId;
-		const user = this.state.getBySessionId(sessionId);
+		const user = this.state.getUserBySessionId(sessionId);
 		if (user) {
 			const entity = user.entity;
 			if (entity) {
@@ -71,13 +71,15 @@ export class AppRoom extends Room {
 				if (consented) {
 					throw new Error("consented leave");
 				}
+				user.save();
 				await this.allowReconnection(client, 20);
 				if (entity) {
 					user.entity.connected = true;
+					user.save();
 				}
 			} catch (e) {
 				user.save();
-				this.state.delete(sessionId, user.userData.openId);
+				this.state.delete(sessionId, user.getOpenId());
 			}
 		}
 	}

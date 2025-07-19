@@ -11,9 +11,9 @@ export class UserEntity {
 	@Column('varchar')
 	public openId: string;
 	@Column('bigint')
-	public createTime: number;
+	public createAt: number;
 	@Column('bigint')
-	public updateTime: number;
+	public updateAt: number;
 	@Column('blob')
 	public userData: Buffer;
 
@@ -30,8 +30,8 @@ export class UserEntity {
 		this.uid = uid;
 		this.nickname = nickname;
 		this.openId = openId;
-		this.createTime = createTime;
-		this.updateTime = updateTime;
+		this.createAt = createTime;
+		this.updateAt = updateTime;
 		this.userData = userData;
 	}
 
@@ -76,7 +76,7 @@ export class UserEntity {
 	}
 
 	public setUpdateTime(ct: number): void {
-		this.updateTime = ct;
+		this.updateAt = ct;
 	}
 
 	public reset(): void {

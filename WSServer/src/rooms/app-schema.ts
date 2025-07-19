@@ -17,11 +17,11 @@ export class AppSchema extends Schema {
 		this._userOpenIdMap.set(openId, user);
 	}
 
-	public getBySessionId(sessionId: string): User | undefined {
+	public getUserBySessionId(sessionId: string): User | undefined {
 		return this._userSessionMap.get(sessionId);
 	}
 
-	public getByOpenId(openId: string): User | undefined {
+	public getUserByOpenId(openId: string): User | undefined {
 		return this._userOpenIdMap.get(openId);
 	}
 

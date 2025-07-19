@@ -24,7 +24,9 @@ enum PlatformType {
 	// 本地
 	H5 = 0;
 	// 微信小游戏
-	WX_MINI = 1;
+	WX = 1;
+	// 抖音小游戏
+	DY = 2;
 }
 
 message S2C_Msg {

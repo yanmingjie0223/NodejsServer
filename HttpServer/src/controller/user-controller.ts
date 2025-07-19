@@ -43,7 +43,7 @@ export async function login(req: CRequest, res: CResponse): Promise<void> {
 					user = new UserEntity();
 					user.initialize();
 					user.openId = openId;
-					user.createTime = ct;
+					user.createAt = ct;
 				}
 				user.setUpdateTime(ct);
 				user.setNickname(reqData.nickname);
