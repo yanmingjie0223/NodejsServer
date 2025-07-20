@@ -4,7 +4,7 @@
         - 8.0.41(latest8.0.34)
 		- 数据库属性
 			- utf8mb4 -- UTF-8 Unicode
-			- utf8mb4_0900_ai_ci
+			- utf8mb4_unicode_ci
     - redis
         - 7.2.5
     - nginx

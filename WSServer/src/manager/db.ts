@@ -15,6 +15,7 @@ export class DB extends Singleton {
 			username: process.env.DB_USER_NAME,
 			password: process.env.DB_PASSWORD,
 			database: process.env.DB_DATABASE,
+			charset: "utf8mb4",
 			synchronize: true,
 			logging: false,
 			entities: [

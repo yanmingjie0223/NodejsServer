@@ -16,6 +16,7 @@ export class DB extends Singleton {
 			username: serverConfig.db.username,
 			password: serverConfig.db.password,
 			database: serverConfig.db.database,
+			charset: "utf8mb4",
 			synchronize: true,
 			logging: false,
 			entities: [
