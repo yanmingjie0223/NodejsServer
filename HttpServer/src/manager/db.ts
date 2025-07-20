@@ -1,5 +1,4 @@
 import * as typeorm from "typeorm";
-import { serverConfig } from "./server-config";
 import { logger } from "./log";
 import Singleton from "../base/singleton";
 import { UserEntity } from "../model/user-entity";
@@ -10,12 +9,12 @@ export class DB extends Singleton {
 
 	public override initialize(): void {
 		const source = new typeorm.DataSource({
-			type: serverConfig.db.type,
-			host: serverConfig.db.host,
-			port: serverConfig.db.port,
-			username: serverConfig.db.username,
-			password: serverConfig.db.password,
-			database: serverConfig.db.database,
+			type: process.env.DB_TYPE as any,
+			host: process.env.DB_HOST,
+			port: +process.env.DB_PORT,
+			username: process.env.DB_USER_NAME,
+			password: process.env.DB_PASSWORD,
+			database: process.env.DB_DATABASE,
 			charset: "utf8mb4",
 			synchronize: true,
 			logging: false,
@@ -26,7 +25,7 @@ export class DB extends Singleton {
 		source.initialize()
 			.then(() => {
 				this.ioDB = source;
-				console.log(`✅ Connecting ${serverConfig.db.type} on ${serverConfig.db.host}:${serverConfig.db.port}`);
+				logger.info(`✅ Connecting ${process.env.DB_TYPE} on ${process.env.DB_HOST}:${process.env.DB_PORT}`);
 			})
 			.catch((e: Error) => {
 				logger.error('database startup failed:', e);

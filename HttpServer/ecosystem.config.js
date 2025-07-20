@@ -1,3 +1,11 @@
+const dotenv = require('dotenv');
+const path = require('path');
+
+// 解析 .env.production 文件
+const envConfig = dotenv.config({
+	path: path.resolve(__dirname, '.env.production')
+}).parsed || {};
+
 module.exports = {
 	apps: [
 		{
@@ -15,7 +23,10 @@ module.exports = {
 			max_memory_restart: "2G", // 超过最大内存则自动重启
 			node_args: [
 				"--max_semi_space_size=64" // 调整V8垃圾回收的新生代内存大小为64mb.以便降低垃圾回收触发几率
-			]
+			],
+			env: {
+				...envConfig // 注入 .env.production 的所有变量
+			}
 		}
 	]
 };

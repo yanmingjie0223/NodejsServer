@@ -7,15 +7,14 @@ set distPath="%curPath%dist\"
 rd /q /s !releasePath!
 rd /q /s !distPath!
 
-call npx tsc
-mkdir %distPath%src\server-config
-copy %curPath%src\server-config\config-release.json %distPath%src\server-config\config.json
-xcopy /s /i /y %curPath%src\luban\lubandata %distPath%src\luban\lubandata
+call npm run release
 
+xcopy /s /i /y %curPath%src\luban\lubandata %distPath%src\luban\lubandata
 xcopy /s /i /y %distPath% %releasePath%dist
 copy %curPath%index.js %releasePath%dist\index.js
 copy %curPath%ecosystem.config.js %releasePath%ecosystem.config.js
 copy %curPath%package.json %releasePath%package.json
+copy %curPath%.env.production %releasePath%.env.production
 
 :toEnd
 echo end

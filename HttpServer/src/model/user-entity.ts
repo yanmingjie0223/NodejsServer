@@ -64,6 +64,17 @@ export class UserEntity {
 		this._userData.avatarUrl = avatarUrl;
 	}
 
+	public setOpenId(openId: string): void {
+		if (!openId) {
+			return;
+		}
+		if (!this._userData) {
+			this.initialize();
+		}
+		this._userData.openId = openId;
+		this.openId = openId;
+	}
+
 	public setNickname(nickname: string): void {
 		if (!this._userData) {
 			this.initialize();

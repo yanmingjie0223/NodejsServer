@@ -9,6 +9,7 @@ enum MsgId {
 
 	// 登录
 	User_C2S_Login = 100100;
+	
 	// 登录返回
 	User_S2C_Login = 200100;
 }

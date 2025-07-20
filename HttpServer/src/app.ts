@@ -1,6 +1,5 @@
 import { db } from "./manager/db";
 import polka, { Next } from "polka";
-import { serverConfig } from "./manager/server-config";
 import { redis } from "./manager/redis";
 import router from "./router";
 import { CRequest, CResponse } from "./interface/index";
@@ -30,8 +29,14 @@ function middleware(req: CRequest, res: CResponse, next: Next): void {
  * @param next
  */
 function crossRegion(req: CRequest, res: CResponse, next: Next): void {
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Methods", "POST, GET");
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Token');
+	if (req.method === 'OPTIONS') {
+		res.statusCode = 200;
+		res.end();
+		return;
+	}
 	next();
 }
 
@@ -109,8 +114,9 @@ const app: polka.Polka = router(polka())
  * 主函数
  */
 export default function runApp() {
-	app.listen(serverConfig.port, () => {
-		console.log(`✅ Running on localhost:${serverConfig.port}`);
+	const port = process.env.PORT;
+	app.listen(port, () => {
+		console.log(`✅ Running on localhost:${port}`);
 		if (process.send) {
 			process.send('ready');
 		}

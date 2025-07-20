@@ -7,7 +7,8 @@
 	"scripts": {
 		"tsx": "tsx watch src/index.ts",
 		"loadtest": "tsx test/load-test.ts --room app-room --numClients 1",
-		"build": "tsc",
+		"build": "tsc --sourceMap",
+		"release": "tsc",
 		"test": "mocha -r tsx ts-node/register test/**-test.ts --exit --timeout 15000",
 		"list": "pm2 ls",
 		"start": "pm2 start ecosystem.config.js",

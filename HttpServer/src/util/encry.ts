@@ -1,5 +1,4 @@
 import md5 from "blueimp-md5";
-import { serverConfig } from "../manager/server-config";
 
 /**
  * 根据openId和添加元素获取生成的token值
@@ -17,5 +16,37 @@ export function getToken(openId: string, salt: number): string {
  * @returns
  */
 export function getRedisKey(openId: string): string {
-	return `user-${serverConfig.app.appname}-${openId}-hope`;
+	return `user-${process.env.APP_NAME}-${openId}-hope`;
+}
+
+/**
+ * 获取应用ID
+ * @returns
+ */
+export function getAppId(): string {
+	return process.env.APP_ID;
+}
+
+/**
+ * 获取应用密钥
+ * @returns
+ */
+export function getAppSecret(): string {
+	return process.env.SECRET_KEY;
+}
+
+/**
+ * 获取应用名字
+ * @returns
+ */
+export function getAppName(): string {
+	return process.env.APP_NAME;
+}
+
+/**
+ * 获取应用平台
+ * @returns
+ */
+export function getAppPlatform(): "local" | "wx" | "dy" {
+	return process.env.PLATFORM as any;
 }

@@ -1,5 +1,4 @@
 import IoRedis from "ioredis";
-import { serverConfig } from "./server-config";
 import Singleton from "../base/singleton";
 import { logger } from "./log";
 
@@ -9,11 +8,11 @@ export class Redis extends Singleton {
 
 	public override initialize(): void {
 		this.ioRedis = new IoRedis({
-			host: serverConfig.redis.host,
-			password: serverConfig.redis.password,
-			port: serverConfig.redis.port,
-			family: serverConfig.redis.family,
-			db: serverConfig.redis.db,
+			host: process.env.REDIS_HOST,
+			password: process.env.REDIS_PASSWORD,
+			port: parseInt(process.env.REDIS_PORT, 10),
+			family: parseInt(process.env.REDIS_FAMILY, 10),
+			db: parseInt(process.env.REDIS_DB, 10),
 			retryStrategy: (times) => {
 				return Math.min(times * 50, 2000);
 			}
@@ -23,7 +22,7 @@ export class Redis extends Singleton {
 			if (err) {
 				logger.error("Failed to connect to Redis:", err);
 			} else {
-				console.log(`✅ Connecting redis on ${serverConfig.redis.host}:${serverConfig.redis.port}`);
+				console.log(`✅ Connecting redis on ${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`);
 			}
 		});
 	}

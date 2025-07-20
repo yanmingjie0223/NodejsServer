@@ -4,6 +4,8 @@
 	"description": "http small server",
 	"main": "./dist/index.js",
 	"scripts": {
+		"build": "tsc --sourceMap",
+		"release": "tsc",
 		"dev-start": "pm2 start dist/index.js",
 		"kill-all": "pm2 kill",
 		"list": "pm2 ls",
@@ -31,6 +33,7 @@
 	"dependencies": {
 		"@bufbuild/protobuf": "^2.2.5",
 		"blueimp-md5": "^2.10.0",
+		"dotenv": "^17.2.0",
 		"ioredis": "^5.5.0",
 		"log4js": "5.1.0",
 		"mysql": "^2.15.0",
