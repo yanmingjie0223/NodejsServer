@@ -2,11 +2,11 @@
 	"name": "server",
 	"version": "1.0.0",
 	"description": "http small server",
-	"main": "./dist/index.js",
+	"main": "./src/index.js",
 	"scripts": {
 		"build": "tsc --sourceMap",
 		"release": "tsc",
-		"dev-start": "pm2 start dist/index.js",
+		"dev-start": "pm2 start src/index.js",
 		"kill-all": "pm2 kill",
 		"list": "pm2 ls",
 		"start": "pm2 start ecosystem.config.js",

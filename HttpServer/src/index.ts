@@ -1,4 +1,4 @@
-import runApp from "./src/app";
+import runApp from "./app";
 
 /**
  * 启动应用入口

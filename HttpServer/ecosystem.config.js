@@ -10,7 +10,7 @@ module.exports = {
 	apps: [
 		{
 			name: "server", //服务名称
-			script: "./dist/index.js", // 入口
+			script: "./src/index.js", // 入口
 			kill_timeout: 5000, // 等待优雅关闭的超时时间(毫秒)
 			listen_timeout: 5000, // 应用启动超时时间
 			wait_ready: true, // 等待应用发送"ready"信号
