@@ -1,58 +1,67 @@
-import log4js from "log4js";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 import Singleton from "../base/singleton";
-
-const infoLog = log4js.getLogger('info');
-const errorLog = log4js.getLogger('error');
+import * as path from "path";
 
 export class Logger extends Singleton {
 
+	private logger: winston.Logger;
+
 	public override initialize(): void {
-		log4js.configure({
-			appenders: {
-				ruleConsole: { type: 'console' },
-				ruleFile: {
-					type: 'dateFile',
-					filename: 'logs/server',
-					pattern: 'yyyy-MM-dd.log',
-					maxLogSize: 10 * 1000 * 1000,
-					numBackups: 3,
-					alwaysIncludePattern: true
-				}
-			},
-			categories: {
-				default: { appenders: ['ruleConsole', 'ruleFile'], level: 'info' }
-			}
+		this.logger = winston.createLogger({
+			level: 'info',
+			format: winston.format.combine(
+				winston.format.timestamp({
+					format: () => {
+						const beijingTime = new Date((new Date()).getTime() + 8 * 3600 * 1000);
+						const timestamp = beijingTime.toISOString().replace('T', ' ');
+						return timestamp.replace(/\..+/, '');
+					}
+				}),
+				winston.format.printf(
+					(info) => {
+						return `[${info.level}][${[info.timestamp]}] ${info.message}`;
+					}
+				),
+				winston.format.errors({ stack: true })
+			),
+			transports: [
+				new DailyRotateFile({
+					filename: path.join("./", 'logs', `%DATE%.log`),
+					datePattern: 'YYYY-MM-DD-HH',
+					zippedArchive: true,
+					maxSize: '20m',
+					maxFiles: '14d'
+				}),
+				new winston.transports.Console({
+					format: winston.format.simple(),
+				})
+			],
 		});
 	}
 
 	public trace(...args: Array<any>): void {
-		infoLog.trace.apply(infoLog, args);
+		this.logger.info(args);
 	}
 
 	public debug(...args: Array<any>): void {
-		infoLog.debug.apply(infoLog, args);
+		this.logger.debug(args);
 	}
 
 	public info(...args: Array<any>): void {
-		infoLog.info.apply(infoLog, args);
+		this.logger.info(args);
 	}
 
 	public log(...args: Array<any>): void {
-		infoLog.info.apply(infoLog, args);
+		this.logger.info(args);
 	}
 
 	public warn(...args: Array<any>): void {
-		infoLog.warn.apply(infoLog, args);
+		this.logger.warn(args);
 	}
 
 	public error(...args: Array<any>): void {
-		infoLog.error.apply(infoLog, args);
-		errorLog.error.apply(errorLog, args);
-	}
-
-	public fatal(...args: Array<any>): void {
-		infoLog.fatal.apply(infoLog, args);
-		errorLog.fatal.apply(errorLog, args);
+		this.logger.error(args);
 	}
 
 }

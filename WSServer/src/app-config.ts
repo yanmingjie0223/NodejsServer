@@ -14,9 +14,19 @@ export default config({
 		logger: winston.createLogger({
 			level: 'info',
 			format: winston.format.combine(
-				winston.format.timestamp(),
-				winston.format.errors({ stack: true }),
-				winston.format.json()
+				winston.format.timestamp({
+					format: () => {
+						const beijingTime = new Date((new Date()).getTime() + 8 * 3600 * 1000);
+						const timestamp = beijingTime.toISOString().replace('T', ' ');
+						return timestamp.replace(/\..+/, '');
+					}
+				}),
+				winston.format.printf(
+					(info) => {
+						return `[${info.level}][${[info.timestamp]}] ${info.message}`;
+					}
+				),
+				winston.format.errors({ stack: true })
 			),
 			transports: [
 				new DailyRotateFile({
@@ -30,7 +40,7 @@ export default config({
 					format: winston.format.simple(),
 				})
 			],
-		})
+		}),
 	},
 
 	initializeTransport: (options) => new WebSocketTransport(options),

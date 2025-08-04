@@ -35,13 +35,14 @@
 		"blueimp-md5": "^2.10.0",
 		"dotenv": "^17.2.0",
 		"ioredis": "^5.5.0",
-		"log4js": "5.1.0",
 		"mysql": "^2.15.0",
 		"pm2": "^6.0.6",
 		"polka": "^0.5.2",
 		"reflect-metadata": "^0.2.2",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.2",
-		"typeorm": "^0.3.20"
+		"typeorm": "^0.3.20",
+		"winston": "^3.17.0",
+		"winston-daily-rotate-file": "^5.0.0"
 	}
 }
