@@ -39,7 +39,7 @@ export async function login(req: CRequest, res: CResponse): Promise<void> {
 				}
 			})
 			.catch((err) => {
-				req.logger.log('err', err);
+				req.logger.error('err', err);
 				sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'wx jscode2session request failed');
 			});
 	}
@@ -62,7 +62,7 @@ export async function login(req: CRequest, res: CResponse): Promise<void> {
 				}
 			})
 			.catch((err) => {
-				req.logger.log('err', err);
+				req.logger.error('err', err);
 				sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'dy jscode2session request failed');
 			});
 	}

@@ -40,19 +40,11 @@ export class Logger extends Singleton {
 		});
 	}
 
-	public trace(...args: Array<any>): void {
-		this.logger.info(args);
-	}
-
 	public debug(...args: Array<any>): void {
 		this.logger.debug(args);
 	}
 
 	public info(...args: Array<any>): void {
-		this.logger.info(args);
-	}
-
-	public log(...args: Array<any>): void {
 		this.logger.info(args);
 	}
 
