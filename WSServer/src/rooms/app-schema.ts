@@ -21,13 +21,12 @@ export class AppSchema extends Schema {
 		return this._userSessionMap.get(sessionId);
 	}
 
-	public getUserByOpenId(openId: string): User | undefined {
-		return this._userOpenIdMap.get(openId);
-	}
-
 	public delete(sessionId: string, openId: string): void {
 		this._userSessionMap.delete(sessionId);
-		this._userOpenIdMap.delete(openId);
+		const user = this._userOpenIdMap.get(openId);
+		if (user && user.client && user.client.sessionId === sessionId) {
+			this._userOpenIdMap.delete(openId);
+		}
 	}
 
 	public clear(): void {
@@ -44,6 +43,10 @@ export class AppSchema extends Schema {
 		const userMap = this._userSessionMap;
 		userMap.forEach((value: User) => {
 			if (value.msgQueue && !value.msgQueue.checkHasMessage()) {
+				const entity = value.entity;
+				if (entity) {
+					entity.connected = false;
+				}
 				value.save();
 			}
 			else {

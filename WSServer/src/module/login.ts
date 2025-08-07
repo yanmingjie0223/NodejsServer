@@ -28,7 +28,7 @@ export class ProtocolLogin {
 					user = await onDYOpenIdLogin(protoObj.code, protoObj.nickname, client, room);
 					break;
 				default:
-					console.error(`unprocessed type: { PLATFORM_TYPE: ${protoObj.platform}}`);
+					console.error(`unprocessed type: { PLATFORM_TYPE: ${protoObj.platform} }`);
 					break;
 			}
 			if (user.client && user.client.sessionId !== sessionId) {
@@ -43,12 +43,19 @@ export class ProtocolLogin {
 				s2c.openId = user.getOpenId();
 				s2c.user = user.userData;
 				sendProtocol(client, proto.msg.MsgId.User_S2C_Login, s2c);
+				logger.info(`user login: { openId: ${user.getOpenId()}, sessionId: ${sessionId} }`);
 			}
 			else {
-				logger.error(`not found user: {account: ${protoObj.nickname}, code: ${protoObj.code}} `);
+				logger.error(`not found user: { account: ${protoObj.nickname}, code: ${protoObj.code} } `);
 				sendErrorProtocol(client, proto.msg.MsgId.User_C2S_Login);
 				client.leave();
 			}
+		}
+		else {
+			const s2c = proto.user.S2C_Login.create();
+			s2c.openId = user.getOpenId();
+			s2c.user = user.userData;
+			sendProtocol(client, proto.msg.MsgId.User_S2C_Login, s2c);
 		}
 	}
 
@@ -63,7 +70,8 @@ export class ProtocolLogin {
  * @returns
  */
 async function onOpenIdAndNicknameLogin(openId: string, nickname: string, client: Client, room: AppRoom): Promise<User> {
-	let user = room.state.getUserByOpenId(openId);
+	const sessionId = client.sessionId;
+	let user = room.state.getUserBySessionId(sessionId);
 	if (!user) {
 		user = new User();
 		await user.initialize(openId, nickname, client, room);
