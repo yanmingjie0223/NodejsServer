@@ -1,4 +1,4 @@
-import { ncb } from "../luban/lubancode/schema";
+import type { ncb } from "../luban/lubancode/schema";
 import { config } from "../manager/cfg";
 
 /**
