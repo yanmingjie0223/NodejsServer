@@ -31,6 +31,7 @@ export class AppRoom extends Room {
 
 	public onCreate(): void {
 		this._active = true;
+		this.autoDispose = false;
 		this.state = new AppSchema();
 		this._msgQueue = new MessageQueue(this);
 		this.onMessage(MessageEvent.LOGIN, (client: Client, uint8s: Uint8Array) => {
