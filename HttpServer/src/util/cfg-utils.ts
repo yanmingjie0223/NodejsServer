@@ -3,7 +3,6 @@ import { config } from "../manager/cfg";
 
 /**
  * Obtain the global singleton data
- * @param key
  * @returns
  */
 export function getGlobal(): ncb.Global {

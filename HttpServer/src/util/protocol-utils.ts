@@ -83,10 +83,9 @@ export function getProtocolUint8Array(msgId: proto.msg.MsgId, protoObj: any): Ui
 
 /**
  * Send protocol data
- * @param client
+ * @param res
  * @param msgId
  * @param protoObj
- * @param event
  * @returns
  */
 export function sendProtocol(res: CResponse, msgId: proto.msg.MsgId, protoObj: any,): void {
@@ -99,7 +98,7 @@ export function sendProtocol(res: CResponse, msgId: proto.msg.MsgId, protoObj: a
 
 /**
  * 发送错误协议
- * @param client
+ * @param res
  * @param c2sMsgId
  * @param message
  */

@@ -1,65 +1,9 @@
-import { db } from "./manager/db";
-import polka, { Next } from "polka";
-import { redis } from "./manager/redis";
-import router from "./router";
-import { CRequest, CResponse } from "./interface/index";
-import { Checkout } from "./manager/checkout";
-import { Config } from "./manager/cfg";
-import { logger } from "./manager/log";
-
-/**
- * 中间件绑定
- * @param req
- * @param res
- * @param next
- */
-function middleware(req: CRequest, res: CResponse, next: Next): void {
-	req.db = db.getConnection();
-	req.redis = redis.getConnection();
-	req.logger = logger;
-	req.config = Config.getInstance();
-	req.checkout = Checkout.getInstance();
-	next();
-}
-
-/**
- * Cross Region
- * @param req
- * @param res
- * @param next
- */
-function crossRegion(req: CRequest, res: CResponse, next: Next): void {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Token');
-	if (req.method === 'OPTIONS') {
-		res.statusCode = 200;
-		res.end();
-		return;
-	}
-	next();
-}
-
-/**
- * buffer转换中间件
- * @param req
- * @param res
- * @param next
- */
-function middlewareBuffer(req: CRequest, res: CResponse, next: Next) {
-	const chunks = [];
-	req.on("data", (chunk) => {
-		chunks.push(chunk);
-	});
-	req.on("end", () => {
-		const buffer = Buffer.concat(chunks);
-		req.body = new Uint8Array(buffer);
-		next();
-	});
-	req.on("error", () => {
-		next();
-	});
-}
+import express from 'express';
+import cors from 'cors';
+import { db, DB } from './manager/db';
+import { redis, Redis } from './manager/redis';
+import { logger, Logger } from './manager/log';
+import router from './router';
 
 /**
  * 优雅关闭，保证db和redis完整性
@@ -105,18 +49,21 @@ process.once('SIGINT', onShutdown);
 process.once('SIGTERM', onShutdown);
 process.once('SIGQUIT', onShutdown);
 process.on('message', onProcessMessage);
-const app: polka.Polka = router(polka())
-	.use(middlewareBuffer as any)
-	.use(middleware as any)
-	.use(crossRegion as any);
 
 /**
  * 主函数
  */
 export default function runApp() {
+	DB.getInstance();
+	Redis.getInstance();
+	Logger.getInstance();
+
 	const port = process.env.PORT;
+	const app = express();
+	app.use(cors());
+	router(app);
 	app.listen(port, () => {
-		console.log(`✅ Running on localhost:${port}`);
+		logger.info(`✅ Running on localhost:${port}`);
 		if (process.send) {
 			process.send('ready');
 		}

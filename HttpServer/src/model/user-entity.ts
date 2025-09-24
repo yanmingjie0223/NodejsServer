@@ -5,7 +5,7 @@ import * as proto from '../protocol/index';
 @Entity({ name: "user" })
 export class UserEntity {
 	@PrimaryGeneratedColumn()
-	public uid: number
+	public uid: number;
 	@Column('varchar')
 	public nickname: string;
 	@Column('varchar')

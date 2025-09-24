@@ -1,6 +1,5 @@
 import querystring from "querystring";
 import * as encry from '../util/encry';
-import request from 'request-promise';
 import { CRequest, CResponse } from "../interface";
 import * as proto from '../protocol/index';
 import { UserEntity } from "../model/user-entity";
@@ -28,43 +27,41 @@ export async function login(req: CRequest, res: CResponse): Promise<void> {
 			grant_type: 'authorization_code'
 		});
 		// https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-login/code2Session.html
-		request('https://api.weixin.qq.com/sns/jscode2session?' + urlData)
-			.then(async (resData) => {
-				resData = JSON.parse(resData);
-				if (!!resData["session_key"] && !!resData['openid']) {
-					const openId = resData['openid'];
-					loginOpenId(openId, req, res);
-				} else {
-					sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'wx return no sessionkey or openid');
-				}
-			})
-			.catch((err) => {
-				req.logger.error('err', err);
-				sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'wx jscode2session request failed');
-			});
+		const response = await fetch('https://api.weixin.qq.com/sns/jscode2session?' + urlData);
+		if (!response.ok) {
+			sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'wx jscode2session request failed');
+		}
+		else {
+			const resData = await response.json();
+			if (!!resData["session_key"] && !!resData['openid']) {
+				const openId = resData['openid'];
+				loginOpenId(openId, req, res);
+			} else {
+				sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'wx return no sessionkey or openid');
+			}
+		}
 	}
 	else if (platform === 'dy') {
-		// https://developer.open-douyin.com/docs/resource/zh-CN/mini-game/develop/server/log-in/code-2-session
 		const urlData = querystring.stringify({
 			appid: encry.getAppId(),
 			secret: encry.getAppSecret(),
 			code: reqData.code,
 			anonymousCode: ''
 		});
-		request('https://minigame.zijieapi.com/mgplatform/api/apps/jscode2session?' + urlData)
-			.then(async (resData) => {
-				resData = JSON.parse(resData);
-				if (!!resData["session_key"] && !!resData['openid']) {
-					const openId = resData['openid'];
-					loginOpenId(openId, req, res);
-				} else {
-					sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'dy return no sessionkey or openid');
-				}
-			})
-			.catch((err) => {
-				req.logger.error('err', err);
-				sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'dy jscode2session request failed');
-			});
+		// https://developer.open-douyin.com/docs/resource/zh-CN/mini-game/develop/server/log-in/code-2-session
+		const response = await fetch('https://minigame.zijieapi.com/mgplatform/api/apps/jscode2session?' + urlData);
+		if (!response.ok) {
+			sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'dy jscode2session request failed');
+		}
+		else {
+			const resData = await response.json();
+			if (!!resData["session_key"] && !!resData['openid']) {
+				const openId = resData['openid'];
+				loginOpenId(openId, req, res);
+			} else {
+				sendErrorProtocol(res, proto.msg.MsgId.User_C2S_Login, 'dy return no sessionkey or openid');
+			}
+		}
 	}
 	else {
 		const openId = reqData.nickname;
