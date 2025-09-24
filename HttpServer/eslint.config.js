@@ -39,7 +39,7 @@ export default [
 			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/explicit-function-return-type': 'off',
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
-			'@typescript-eslint/no-inferrable-types': 'warn',
+			'@typescript-eslint/no-inferrable-types': 'off',
 			'@typescript-eslint/prefer-namespace-keyword': 'error',
 			'@typescript-eslint/triple-slash-reference': 'error',
 
