@@ -1,6 +1,6 @@
 import IoRedis from "ioredis";
 import Singleton from "../base/singleton";
-import { logger } from "./log";
+import { logger } from "colyseus";
 
 export class Redis extends Singleton {
 
