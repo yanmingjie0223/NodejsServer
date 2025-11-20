@@ -1,10 +1,13 @@
 import querystring from "querystring";
 import * as encry from '../util/encry';
-import { CRequest, CResponse } from "../interface";
 import * as proto from '../protocol/index';
 import { UserEntity } from "../model/user-entity";
 import { getUserByOpenId } from "../util/user-utils";
 import { sendErrorProtocol, sendProtocol } from "../util/protocol-utils";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { Checkout } from "../manager/checkout";
+import { redis } from "../manager/redis";
+import { db } from "../manager/db";
 
 /**
  * 登录
@@ -12,8 +15,8 @@ import { sendErrorProtocol, sendProtocol } from "../util/protocol-utils";
  * @param res
  * @returns
  */
-export async function login(req: CRequest, res: CResponse): Promise<void> {
-	const reqData = await req.checkout.getData<proto.user.C2S_Login>(req, res);
+export async function login(req: FastifyRequest, res: FastifyReply): Promise<void> {
+	const reqData = await Checkout.getInstance<Checkout>().getData<proto.user.C2S_Login>(req, res);
 	if (!reqData) {
 		return;
 	}
@@ -78,10 +81,10 @@ export async function login(req: CRequest, res: CResponse): Promise<void> {
  * 登录OpenId
  * @param openId
  */
-async function loginOpenId(openId: string, req: CRequest, res: CResponse) {
-	const reqData = await req.checkout.getData<proto.user.C2S_Login>(req, res);
-	const redis = req.redis;
-	const userRepository = req.db.getRepository(UserEntity);
+async function loginOpenId(openId: string, req: FastifyRequest, res: FastifyReply) {
+	const reqData = await Checkout.getInstance<Checkout>().getData<proto.user.C2S_Login>(req, res);
+	const ioredis = redis.getConnection();
+	const userRepository = db.getConnection().getRepository(UserEntity);
 	let user: UserEntity = await getUserByOpenId(userRepository, 'user', openId);
 
 	const ct = Date.now();
@@ -98,8 +101,8 @@ async function loginOpenId(openId: string, req: CRequest, res: CResponse) {
 
 	const reidsKey = encry.getRedisKey(openId);
 	const token = encry.getToken(openId, ct);
-	redis.set(reidsKey, token);
-	redis.expire(reidsKey, 24 * 60 * 60);
+	ioredis.set(reidsKey, token);
+	ioredis.expire(reidsKey, 24 * 60 * 60);
 
 	const s2c = proto.user.S2C_Login.create();
 	s2c.code = proto.msg.MsgCode.SUCC;

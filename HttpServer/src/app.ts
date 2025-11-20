@@ -1,9 +1,10 @@
-import express from 'express';
-import cors from 'cors';
+import fastify from 'fastify';
 import { db, DB } from './manager/db';
 import { redis, Redis } from './manager/redis';
 import { logger, Logger } from './manager/log';
 import router from './router';
+import { parentPort } from 'worker_threads';
+import cors from '@fastify/cors';
 
 /**
  * 优雅关闭，保证db和redis完整性
@@ -53,19 +54,35 @@ process.on('message', onProcessMessage);
 /**
  * 主函数
  */
-export default function runApp() {
+export default async function runApp() {
 	DB.getInstance();
 	Redis.getInstance();
 	Logger.getInstance();
 
-	const port = process.env.PORT;
-	const app = express();
-	app.use(cors());
-	router(app);
-	app.listen(port, () => {
-		logger.info(`✅ Running on localhost:${port}`);
-		if (process.send) {
-			process.send('ready');
-		}
+	const port = +process.env.PORT;
+	const server = fastify({ logger: false });
+
+	server.register(cors, {
+		origin: '*',
+		methods: ['GET', 'PUT', 'POST'],
 	});
+
+	router(server);
+
+	try {
+		await server.listen({ port, host: '0.0.0.0' });
+
+		if (typeof process.send === 'function') {
+			process.send('ready');
+		} else if (parentPort && typeof parentPort.postMessage === 'function') {
+			parentPort.postMessage('ready');
+		}
+
+		logger.info(`✅ Running on localhost:${port}`);
+	} catch (err) {
+		logger.error('Failed to start server:', err);
+
+		process.exit(1);
+	}
+
 }

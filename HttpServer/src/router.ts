@@ -1,14 +1,17 @@
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { login } from "./controller/user-controller";
-import { Express } from 'express';
 
 /**
  * 路由器配置类
  * @param app
  * @returns
  */
-export default function (app: Express): Express {
+export default function (app: FastifyInstance): FastifyInstance {
 
-	app.post('/login', login as any);
+	app.get('/ping', (request: FastifyRequest, reply: FastifyReply) => {
+		reply.send({ code: 0 });
+	});
+	app.post('/login', login);
 
 	return app;
 }

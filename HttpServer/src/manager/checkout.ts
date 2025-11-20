@@ -1,8 +1,9 @@
 import Singleton from "../base/singleton";
 import * as encry from '../util/encry';
 import * as proto from "../protocol/index";
-import { CRequest, CResponse } from "../interface/index";
 import { getProtocol, sendErrorProtocol } from "../util/protocol-utils";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { redis } from "./redis";
 
 export class Checkout extends Singleton {
 
@@ -12,7 +13,7 @@ export class Checkout extends Singleton {
 	 * @param res
 	 * @returns
 	 */
-	public async getLoginData<T>(req: CRequest, res: CResponse): Promise<T | null> {
+	public async getLoginData<T>(req: FastifyRequest, res: FastifyReply): Promise<T | null> {
 		const data: any = await this.getData<T>(req, res);
 		if (!data) {
 			return null;
@@ -21,7 +22,7 @@ export class Checkout extends Singleton {
 		const openId = data.openId;
 		const token = data.token;
 		const reidsKey = encry.getRedisKey(openId);
-		const redis_token = await req.redis.get(reidsKey);
+		const redis_token = await redis.getConnection().get(reidsKey);
 
 		if (token !== redis_token) {
 			sendErrorProtocol(res, proto.msg.MsgId.NULL, 'token auth failed');
@@ -37,14 +38,14 @@ export class Checkout extends Singleton {
 	 * @param res
 	 * @returns
 	 */
-	public async getData<T>(req: CRequest, res: CResponse): Promise<T | null> {
+	public async getData<T>(req: FastifyRequest, res: FastifyReply): Promise<T | null> {
 		if (!req.body) {
 			sendErrorProtocol(res, proto.msg.MsgId.NULL, 'upload data is not json data');
 			return null;
 		}
 
 		try {
-			const data = getProtocol(req.body);
+			const data = getProtocol(req.body as Uint8Array);
 			return data as T;
 		} catch (error) {
 			sendErrorProtocol(res, proto.msg.MsgId.NULL, 'upload data is not json data');

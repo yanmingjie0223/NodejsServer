@@ -1,4 +1,4 @@
-import { CResponse } from "../interface";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { logger } from "../manager/log";
 import * as proto from "../protocol/index";
 import { BinaryWriter, BinaryReader } from "@bufbuild/protobuf/wire";
@@ -83,29 +83,29 @@ export function getProtocolUint8Array(msgId: proto.msg.MsgId, protoObj: any): Ui
 
 /**
  * Send protocol data
- * @param res
+ * @param replay
  * @param msgId
  * @param protoObj
  * @returns
  */
-export function sendProtocol(res: CResponse, msgId: proto.msg.MsgId, protoObj: any,): void {
+export function sendProtocol(replay: FastifyReply, msgId: proto.msg.MsgId, protoObj: any,): void {
 	const uint8s = getProtocolUint8Array(msgId, protoObj);
 	if (!uint8s) {
 		return;
 	}
-	res.end(uint8s);
+	replay.send(uint8s);
 }
 
 /**
  * 发送错误协议
- * @param res
+ * @param reply
  * @param c2sMsgId
  * @param message
  */
-export function sendErrorProtocol(res: CResponse, c2sMsgId: proto.msg.MsgId, message: string = ''): void {
+export function sendErrorProtocol(reply: FastifyReply, c2sMsgId: proto.msg.MsgId, message: string = ''): void {
 	const errorData = proto.msg.S2C_Msg.create();
 	errorData.code = proto.msg.MsgCode.ERROR;
 	errorData.message = message;
 	errorData.mId = c2sMsgId;
-	sendProtocol(res, proto.msg.MsgId.Msg_S2C_Msg, errorData);
+	sendProtocol(reply, proto.msg.MsgId.Msg_S2C_Msg, errorData);
 }

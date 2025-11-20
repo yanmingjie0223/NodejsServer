@@ -1,13 +1,22 @@
 import * as typeorm from "typeorm";
 import Singleton from "../base/singleton";
-import { UserEntity } from "../db/user-entity";
 import { logger } from "colyseus";
+import { User } from "../db/user";
 
 export class DB extends Singleton {
 
 	private ioDB: typeorm.DataSource;
+	private readonly retryInterval = 5000;
 
 	public override initialize(): void {
+		this.tryConnect();
+	}
+
+	public getConnection(): typeorm.DataSource {
+		return this.ioDB;
+	}
+
+	private tryConnect(): void {
 		const source = new typeorm.DataSource({
 			type: process.env.DB_TYPE as any,
 			host: process.env.DB_HOST,
@@ -19,9 +28,10 @@ export class DB extends Singleton {
 			synchronize: true,
 			logging: false,
 			entities: [
-				UserEntity,
+				User,
 			]
 		});
+
 		source.initialize()
 			.then(() => {
 				this.ioDB = source;
@@ -29,11 +39,9 @@ export class DB extends Singleton {
 			})
 			.catch((e: Error) => {
 				logger.error('database startup failed:', e);
+				logger.info(`Retrying database connection in ${this.retryInterval}ms...`);
+				setTimeout(() => this.tryConnect(), this.retryInterval);
 			});
-	}
-
-	public getConnection(): typeorm.DataSource {
-		return this.ioDB;
 	}
 
 }
