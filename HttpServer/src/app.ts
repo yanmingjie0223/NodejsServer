@@ -7,6 +7,52 @@ import { parentPort } from 'worker_threads';
 import cors from '@fastify/cors';
 
 /**
+ * 主函数
+ */
+export default async function runApp() {
+	DB.getInstance();
+	Redis.getInstance();
+	Logger.getInstance();
+
+	const port = +process.env.PORT;
+	const server = fastify({ logger: false });
+
+	server.register(cors, {
+		origin: '*',
+		methods: ['GET', 'PUT', 'POST'],
+	});
+
+	router(server);
+
+	try {
+		await server.listen({ port, host: '0.0.0.0' });
+
+		if (typeof process.send === 'function') {
+			process.send('ready');
+		} else if (parentPort && typeof parentPort.postMessage === 'function') {
+			parentPort.postMessage('ready');
+		}
+
+		logger.info(`✅ Running on localhost:${port}`);
+	} catch (err) {
+		logger.error('Failed to start server:', err);
+
+		process.exit(1);
+	}
+
+}
+
+/**
+ * 监听关机处理
+ */
+export async function listenShutdown() {
+	process.once('SIGINT', onShutdown);
+	process.once('SIGTERM', onShutdown);
+	process.once('SIGQUIT', onShutdown);
+	process.on('message', onProcessMessage);
+}
+
+/**
  * 优雅关闭，保证db和redis完整性
  */
 async function onShutdown() {
@@ -44,45 +90,4 @@ async function onProcessMessage(msg: string) {
 	if (msg === 'shutdown') {
 		await onShutdown();
 	}
-}
-
-process.once('SIGINT', onShutdown);
-process.once('SIGTERM', onShutdown);
-process.once('SIGQUIT', onShutdown);
-process.on('message', onProcessMessage);
-
-/**
- * 主函数
- */
-export default async function runApp() {
-	DB.getInstance();
-	Redis.getInstance();
-	Logger.getInstance();
-
-	const port = +process.env.PORT;
-	const server = fastify({ logger: false });
-
-	server.register(cors, {
-		origin: '*',
-		methods: ['GET', 'PUT', 'POST'],
-	});
-
-	router(server);
-
-	try {
-		await server.listen({ port, host: '0.0.0.0' });
-
-		if (typeof process.send === 'function') {
-			process.send('ready');
-		} else if (parentPort && typeof parentPort.postMessage === 'function') {
-			parentPort.postMessage('ready');
-		}
-
-		logger.info(`✅ Running on localhost:${port}`);
-	} catch (err) {
-		logger.error('Failed to start server:', err);
-
-		process.exit(1);
-	}
-
 }
