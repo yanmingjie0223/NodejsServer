@@ -15,17 +15,17 @@ export default async function runApp() {
 	Logger.getInstance();
 
 	const port = +process.env.PORT;
-	const server = fastify({ logger: false });
+	const app = fastify({ logger: false });
 
-	server.register(cors, {
+	app.register(cors, {
 		origin: '*',
 		methods: ['GET', 'PUT', 'POST'],
 	});
 
-	router(server);
+	router(app);
 
 	try {
-		await server.listen({ port, host: '0.0.0.0' });
+		await app.listen({ port, host: '0.0.0.0' });
 
 		if (typeof process.send === 'function') {
 			process.send('ready');
