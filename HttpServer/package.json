@@ -13,6 +13,9 @@
 		"stop": "pm2 stop server",
 		"reload": "pm2 reload server"
 	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {

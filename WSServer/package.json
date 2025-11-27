@@ -15,6 +15,9 @@
 		"stop": "pm2 stop ws-server",
 		"restart": "pm2 restart ws-server"
 	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
