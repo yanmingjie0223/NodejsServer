@@ -9,7 +9,7 @@ import cors from '@fastify/cors';
 /**
  * 主函数
  */
-export default async function runApp() {
+export default async function runApp(): Promise<void> {
 	DB.getInstance();
 	Redis.getInstance();
 	Logger.getInstance();
@@ -45,7 +45,7 @@ export default async function runApp() {
 /**
  * 监听关机处理
  */
-export async function listenShutdown() {
+export async function listenShutdown(): Promise<void> {
 	process.once('SIGINT', onShutdown);
 	process.once('SIGTERM', onShutdown);
 	process.once('SIGQUIT', onShutdown);
@@ -55,7 +55,7 @@ export async function listenShutdown() {
 /**
  * 优雅关闭，保证db和redis完整性
  */
-async function onShutdown() {
+async function onShutdown(): Promise<void> {
 	console.log("Received SIGINT signal, closing Redis And DB connection...");
 
 	process.off('message', onProcessMessage);
@@ -86,7 +86,7 @@ async function onShutdown() {
  * 消息处理
  * @param msg
  */
-async function onProcessMessage(msg: string) {
+async function onProcessMessage(msg: string): Promise<void> {
 	if (msg === 'shutdown') {
 		await onShutdown();
 	}

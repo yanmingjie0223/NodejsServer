@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply } from "fastify";
 import { logger } from "../manager/log";
 import * as proto from "../protocol/index";
 import { BinaryWriter, BinaryReader } from "@bufbuild/protobuf/wire";
